@@ -17,6 +17,7 @@ export const KaTeXRenderer: React.FC<KaTeXRendererProps> = ({
       return katex.renderToString(math, {
         displayMode: block,
         throwOnError: false,
+        output: 'html', // Output clean HTML only without duplicating MathML string
       });
     } catch (err) {
       return math;
@@ -26,7 +27,7 @@ export const KaTeXRenderer: React.FC<KaTeXRendererProps> = ({
   if (block) {
     return (
       <div
-        className={`katex-block p-4 my-3 bg-[#121620] border border-white/10 rounded-xl overflow-x-auto text-slate-100 font-mono text-sm ${className}`}
+        className={`katex-block p-5 my-4 bg-[#121620] border border-white/10 rounded-xl overflow-x-auto text-slate-100 font-mono text-base md:text-lg flex justify-center ${className}`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );
@@ -34,7 +35,7 @@ export const KaTeXRenderer: React.FC<KaTeXRendererProps> = ({
 
   return (
     <span
-      className={`katex-inline inline-block px-1 text-indigo-300 font-mono text-xs ${className}`}
+      className={`katex-inline inline-block px-1 text-indigo-300 font-mono text-sm ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
