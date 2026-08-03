@@ -14,13 +14,7 @@ export const KaTeXRenderer: React.FC<KaTeXRendererProps> = ({
 }) => {
   const html = useMemo(() => {
     try {
-      // Clean raw text formatting if any
-      const cleaned = math
-        .replace(/\\text\{step\}/g, '\\operatorname{step}')
-        .replace(/\\text\{where\}/g, '\\quad\\text{where}')
-        .replace(/\\text\{Children\}/g, '\\text{Children}');
-
-      return katex.renderToString(cleaned, {
+      return katex.renderToString(math, {
         displayMode: block,
         throwOnError: false,
       });
@@ -32,7 +26,7 @@ export const KaTeXRenderer: React.FC<KaTeXRendererProps> = ({
   if (block) {
     return (
       <div
-        className={`katex-block p-4 my-3 bg-slate-900/90 border border-slate-800 rounded-xl overflow-x-auto text-slate-100 font-mono text-sm ${className}`}
+        className={`katex-block p-4 my-3 bg-[#121620] border border-white/10 rounded-xl overflow-x-auto text-slate-100 font-mono text-sm ${className}`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );
