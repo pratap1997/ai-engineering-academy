@@ -1,0 +1,7 @@
+id: "033"
+title: "Supervised Fine-Tuning & PEFT (LoRA / QLoRA)"
+difficulty: "Advanced"
+prerequisites: ["004-training-loops", "011-transformer"]
+estimated_minutes: 120
+sources:
+  - "Hu et al. 2021"

@@ -1,0 +1,30 @@
+id: 025-advanced-rag-reranking
+title: "Advanced RAG & Cross-Encoder Re-ranking"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "012-bert-gpt-pretraining"
+  - "024-vector-databases-indexing"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements Advanced RAG architectures from scratch in pure Python & NumPy:
+  Hierarchical Parent-Child Chunking, Cross-Encoder Re-ranking with Softmax Score Normalization,
+  Reciprocal Rank Fusion (RRF) metadata filtering, and Context Window Compression.
+
+outcomes:
+  - "Implement Parent-Child Document Chunking preserving sentence granularity inside paragraph context"
+  - "Implement CrossEncoderReranker computing deep query-document cross-attention scores"
+  - "Implement RAGPipeline combining dense vector retrieval, cross-encoder re-ranking, and context construction"
+  - "Measure retrieval precision and MAP (Mean Average Precision) improvement over basic bi-encoder search"
+
+sources:
+  - name: "Nogueira & Cho (2019) Passage Re-ranking with BERT"
+    url: "https://arxiv.org/abs/1901.04085"
+    type: "Paper"
+  - name: "Gao et al. (2023) Retrieval-Augmented Generation for Large Language Models: A Survey"
+    url: "https://arxiv.org/abs/2312.10997"
+    type: "Paper"

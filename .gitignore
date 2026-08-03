@@ -9,6 +9,8 @@
 venv/
 ENV/
 
+.pytest_cache/
+
 # ignore all pdf creation files
 package.json
 package-lock.json

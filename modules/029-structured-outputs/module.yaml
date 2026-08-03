@@ -1,0 +1,12 @@
+id: "029"
+title: "Structured Outputs & Function Calling"
+subtitle: "Reliable JSON Extraction, Tool Schemas, and Constrained Decoding"
+difficulty: "intermediate"
+prerequisites: ["011", "026"]
+estimated_minutes: 150
+topics:
+  - "JSON schema validation"
+  - "Function calling and tool schemas"
+  - "Constrained decoding"
+  - "Structured output extraction"
+  - "Retry and repair strategies"

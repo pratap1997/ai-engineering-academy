@@ -1,0 +1,13 @@
+id: "028"
+title: "Agent Memory Systems"
+subtitle: "Working, Episodic, Semantic, and Procedural Memory for AI Agents"
+difficulty: "advanced"
+prerequisites: ["024", "026"]
+estimated_minutes: 210
+topics:
+  - "Working memory and context windows"
+  - "Episodic memory with vector retrieval"
+  - "Semantic memory and knowledge bases"
+  - "Ebbinghaus forgetting curve"
+  - "Hopfield associative networks"
+  - "Memory consolidation strategies"

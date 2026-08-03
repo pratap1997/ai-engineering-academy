@@ -1,0 +1,32 @@
+id: 008-rnn-basics
+title: "Recurrent Neural Networks & Sequential Data (RNN, BPTT & Exploding Gradients)"
+version: "1.0.0"
+difficulty: "Intermediate"
+prerequisites:
+  - "001-perceptron"
+  - "002-multilayer"
+  - "003-backprop"
+  - "004-training-loops"
+  - "005-regularization"
+estimated_minutes: 85
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-01"
+
+summary: >
+  Implements Vanilla RNN cells, Backpropagation Through Time (BPTT), Gradient Clipping by Norm,
+  and Character-level Language Models from scratch in pure Python & NumPy, solving temporal sequence modeling and exploding gradients.
+
+outcomes:
+  - "Implement RNNCell, RNNSequence, GradientClipper, and CharRNN from scratch in pure Python & NumPy"
+  - "Derive the unrolled Backpropagation Through Time (BPTT) temporal chain rule"
+  - "Demonstrate exploding gradients in long sequences and mitigate them using Gradient Clipping by Norm"
+  - "Train a Character-level Language Model to predict sequential tokens"
+
+sources:
+  - name: "Elman (1990) Finding Structure in Time"
+    url: "https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.118.4727&rep=rep1&type=pdf"
+    type: "Paper"
+  - name: "Pascanu, Mikolov, & Bengio (2013) On the difficulty of training Recurrent Neural Networks"
+    url: "https://arxiv.org/abs/1211.5063"
+    type: "Paper"

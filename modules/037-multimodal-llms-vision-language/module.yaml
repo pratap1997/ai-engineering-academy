@@ -1,0 +1,13 @@
+id: "037"
+title: "Multimodal LLMs & Vision-Language Models"
+difficulty: "Advanced"
+prerequisites:
+  - "011-transformer"
+  - "006-cnn-basics"
+estimated_minutes: 120
+tags:
+  - vision-language
+  - multimodal
+  - vit
+  - llm
+  - patchification

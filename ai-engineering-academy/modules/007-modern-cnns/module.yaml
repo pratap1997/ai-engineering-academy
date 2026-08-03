@@ -1,0 +1,33 @@
+id: 007-modern-cnns
+title: "Modern CNN Architectures (ResNet, Skip Connections & Bottlenecks)"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "001-perceptron"
+  - "002-multilayer"
+  - "003-backprop"
+  - "004-training-loops"
+  - "005-regularization"
+  - "006-cnn-basics"
+estimated_minutes: 95
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-01"
+
+summary: >
+  Implements Residual Blocks, Bottlenecks, 1x1 Projection Shortcuts, Global Average Pooling, and ResNet-18
+  from scratch in pure Python & NumPy, proving how identity skip connections prevent vanishing gradients in deep networks.
+
+outcomes:
+  - "Implement Residual Blocks, Bottlenecks, Projection Shortcuts, and Global Average Pooling from scratch"
+  - "Derive the gradient highway formula dL/dx = dL/dy * (1 + dF/dx) and explain why identity mappings prevent gradient decay"
+  - "Demonstrate vanishing gradient mitigation comparing 20-layer Plain CNNs vs 20-layer ResNets"
+  - "Construct a complete ResNet-18 architecture in pure Python & NumPy"
+
+sources:
+  - name: "He, Zhang, Ren, & Sun (2015) Deep Residual Learning for Image Recognition"
+    url: "https://arxiv.org/abs/1512.03385"
+    type: "Paper"
+  - name: "He, Zhang, Ren, & Sun (2016) Identity Mappings in Deep Residual Networks"
+    url: "https://arxiv.org/abs/1603.05027"
+    type: "Paper"

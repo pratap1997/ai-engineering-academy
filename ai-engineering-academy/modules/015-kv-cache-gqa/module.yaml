@@ -1,0 +1,29 @@
+id: 015-kv-cache-gqa
+title: "KV Cache & Grouped-Query Attention (GQA / MQA / MHA)"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "010-attention"
+  - "011-transformer"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements Key-Value (KV) Caching for autoregressive inference acceleration and Grouped-Query Attention (GQA)
+  from scratch in pure Python & NumPy. Explains the memory bandwidth bottleneck of LLM generation and how GQA bridges MHA and MQA.
+
+outcomes:
+  - "Implement a dynamic KVCache data structure for fast O(1) step autoregressive decoding"
+  - "Implement GroupedQueryAttention supporting Multi-Head (MHA), Multi-Query (MQA), and Grouped-Query (GQA)"
+  - "Calculate KV cache memory footprint across context lengths and batch sizes"
+  - "Benchmark decoding throughput speedup using KV caching vs recomputing full prefix attention"
+
+sources:
+  - name: "Ainslie et al. (2023) GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints"
+    url: "https://arxiv.org/abs/2305.13245"
+    type: "Paper"
+  - name: "Shazeer (2019) Fast Transformer Decoding: One Write-Head is All You Need (Multi-Query Attention)"
+    url: "https://arxiv.org/abs/1911.02150"
+    type: "Paper"

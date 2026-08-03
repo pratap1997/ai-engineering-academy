@@ -1,0 +1,30 @@
+id: 020-multi-head-latent-attention
+title: "Multi-Head Latent Attention (MLA) & Low-Rank KV Compression"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "010-attention"
+  - "015-kv-cache-gqa"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements DeepSeek's Multi-Head Latent Attention (MLA) architecture from scratch in pure Python & NumPy:
+  Low-rank key-value joint compression into latent vector c_KV, decoupled RoPE projection c_RoPE,
+  matrix absorption for zero-overhead inference, and 93% KV cache compression compared to MHA.
+
+outcomes:
+  - "Implement low-rank KV joint compression into latent vector c_KV of dimension d_c"
+  - "Implement decoupled Rotary Positional Encoding (RoPE) for key and query vectors"
+  - "Implement projection matrix absorption (W_UK and W_UV into W_Q) to eliminate latent expansion overhead during inference"
+  - "Calculate KV cache memory compression ratio (>90% savings over standard MHA)"
+
+sources:
+  - name: "DeepSeek-AI (2024) DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model"
+    url: "https://arxiv.org/abs/2405.04434"
+    type: "Paper"
+  - name: "DeepSeek-AI (2024) DeepSeek-V3 Technical Report"
+    url: "https://arxiv.org/abs/2412.19437"
+    type: "Paper"

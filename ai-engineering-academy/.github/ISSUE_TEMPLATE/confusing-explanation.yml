@@ -1,0 +1,52 @@
+name: Report a Confusing Explanation
+description: Something is not wrong, but it was unclear or led you to a wrong mental model
+title: "[CONFUSION] "
+labels: ["confusion", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Confusion reports are the highest-value feedback this academy receives.
+        They become assessment questions, mental model improvements, and experiment ideas.
+
+  - type: input
+    id: module
+    attributes:
+      label: Module
+      placeholder: 001-perceptron
+    validations:
+      required: true
+
+  - type: input
+    id: artifact
+    attributes:
+      label: Affected artifact and section
+      placeholder: "02-mental-model.md — The four components section"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_you_understood
+    attributes:
+      label: What you initially understood it to mean
+      description: Describe your mental model after first reading.
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_it_actually_means
+    attributes:
+      label: What you later discovered it actually means
+      description: What is the correct understanding you eventually arrived at?
+    validations:
+      required: true
+
+  - type: textarea
+    id: better_explanation
+    attributes:
+      label: What would have helped
+      description: >
+        Suggest a wording change, diagram, example, or analogy that would have
+        made the concept clearer on first reading.
+    validations:
+      required: false

@@ -1,0 +1,61 @@
+name: Experiment Reproduction Failure
+description: You could not reproduce an experiment result with the stated parameters
+title: "[REPRODUCTION] "
+labels: ["reproducibility", "needs-review"]
+body:
+  - type: input
+    id: module
+    attributes:
+      label: Module
+      placeholder: 001-perceptron
+    validations:
+      required: true
+
+  - type: input
+    id: experiment
+    attributes:
+      label: Experiment name
+      placeholder: "Experiment: Remove the bias term"
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, NumPy version, Jupyter version
+      placeholder: |
+        OS: Windows 11
+        Python: 3.12.4
+        NumPy: 1.26.4
+        Jupyter: 7.2.1
+    validations:
+      required: true
+
+  - type: textarea
+    id: parameters
+    attributes:
+      label: Parameters used
+      description: Seed, learning rate, epochs, dataset, changed variable
+      placeholder: |
+        seed: 42
+        learning_rate: 0.1
+        epochs: 100
+        dataset: AND gate
+        changed variable: bias removed
+    validations:
+      required: true
+
+  - type: textarea
+    id: documented_result
+    attributes:
+      label: Documented result (what the module says should happen)
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed_result
+    attributes:
+      label: Your observed result (what actually happened)
+    validations:
+      required: true

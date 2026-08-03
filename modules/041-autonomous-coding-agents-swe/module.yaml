@@ -1,0 +1,7 @@
+id: "041"
+title: "Autonomous Coding Agents & SWE"
+difficulty: "Advanced"
+estimated_minutes: 180
+prerequisites:
+  - "026"
+  - "031"

@@ -1,0 +1,16 @@
+id: "043-voice-audio-agents-streaming-stt-tts"
+title: "Voice & Audio Agents (Streaming STT, TTS Pipelines)"
+difficulty: "Advanced"
+prerequisites:
+  - "026-agentic-loop-primitives"
+  - "037-multimodal-llms-vision-language"
+estimated_minutes: 180
+sources:
+  - title: "Robust Speech Recognition via Large-Scale Weak Supervision (Whisper)"
+    authors: "Radford et al."
+    year: 2022
+    url: "https://arxiv.org/abs/2212.04356"
+  - title: "Voicebox Documentation"
+    type: "Documentation"
+  - title: "WebRTC VAD Specification"
+    type: "Standard"

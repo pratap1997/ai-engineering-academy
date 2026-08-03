@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 007 — Residual Skip Connections & Gradient Highway</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #060610; --surface: #0d0d1a; --surface-2: #12122a;
+      --border: rgba(255,255,255,0.08); --blue: #00d4ff; --purple: #8b5cf6;
+      --green: #10b981; --red: #ef4444; --amber: #f59e0b;
+      --text: #e2e8f0; --text-muted: #64748b;
+      --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; height: 100vh; overflow: hidden; }
+    #root { height: 100%; }
+    .mono { font-family: var(--mono); }
+    .text-blue { color: var(--blue); } .text-purple { color: var(--purple); }
+    .text-green { color: var(--green); } .text-red { color: var(--red); } .text-amber { color: var(--amber); }
+    .text-muted { color: var(--text-muted); }
+
+    .app { display: flex; flex-direction: column; height: 100vh; }
+    header { background: #0a0a18; border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .badge { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: var(--green); font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+    
+    main { flex: 1; display: grid; grid-template-columns: 280px 1fr 300px; min-height: 0; }
+    aside { background: var(--surface); padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; border-right: 1px solid var(--border); }
+    aside.right { border-right: none; border-left: 1px solid var(--border); }
+
+    .sec-title { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .ctrl-row { margin-bottom: 8px; }
+    .ctrl-lbl { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; }
+    input[type=range] { width: 100%; accent-color: var(--green); }
+
+    .center-stage { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 16px; background: var(--bg); }
+    .svg-wrap { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; }
+
+    .stat-card { background: var(--surface-2); padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function App() {
+      const [numLayers, setNumLayers] = useState(10);
+      const [attenuation, setAttenuation] = useState(0.6); // Weight attenuation factor
+
+      // Calculate Gradient Survival
+      let plainGrad = 1.0;
+      let resnetGrad = 1.0;
+
+      for (let i = 0; i < numLayers; i++) {
+        plainGrad *= attenuation;
+        resnetGrad = resnetGrad * (1.0 + attenuation * 0.2);
+      }
+
+      return (
+        <div className="app">
+          <header>
+            <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+              <span className="badge">MODULE 007</span>
+              <h2 style={{fontSize: '18px', color: '#fff'}}>Residual Skip Connections & Gradient Highway</h2>
+            </div>
+            <div style={{display: 'flex', gap: '10px', alignItems: 'center', background: 'rgba(16,185,129,0.12)', border: '1px solid #10b981', padding: '4px 12px', borderRadius: '8px', color: '#10b981'}}>
+              <span style={{fontSize: '10px', letterSpacing: '1px'}}>GRADIENT SURVIVAL AT LAYER 1</span>
+              <strong className="mono" style={{fontSize: '16px'}}>{resnetGrad.toFixed(2)}x (ResNet) vs {plainGrad.toFixed(6)} (Plain)</strong>
+            </div>
+          </header>
+
+          <main>
+            {/* Left Controls */}
+            <aside>
+              <div>
+                <div className="sec-title">Network Parameters</div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-green">Network Depth (Layers)</span><span className="mono">{numLayers}</span></div>
+                  <input type="range" min="2" max="30" step="1" value={numLayers} onChange={e => setNumLayers(+e.target.value)}/>
+                </div>
+
+                <div className="ctrl-row" style={{marginTop: '12px'}}>
+                  <div className="ctrl-lbl"><span className="text-blue">Sub-Layer Attenuation Factor</span><span className="mono">{attenuation.toFixed(2)}</span></div>
+                  <input type="range" min="0.1" max="0.9" step="0.05" value={attenuation} onChange={e => setAttenuation(+e.target.value)}/>
+                </div>
+              </div>
+            </aside>
+
+            {/* Center Stage Architecture Diagram */}
+            <div className="center-stage">
+              <div className="svg-wrap">
+                <svg viewBox="0 0 800 450" style={{width: '100%', height: '100%', maxWidth: 800}}>
+                  <defs>
+                    <filter id="g-green"><feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#10b981" floodOpacity="0.8"/></filter>
+                    <filter id="g-red"><feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#ef4444" floodOpacity="0.8"/></filter>
+                  </defs>
+
+                  {/* Plain Network Pipeline (Top) */}
+                  <text x="60" y="70" fill="#ef4444" fontSize="13" fontFamily="JetBrains Mono" fontWeight="bold">PLAIN CNN (NO SKIPS)</text>
+                  <line x1="60" y1="120" x2="740" y2="120" stroke="#ef4444" strokeWidth="2.5" opacity={plainGrad > 0.01 ? 0.8 : 0.2}/>
+                  
+                  {/* Layer Nodes Plain */}
+                  {[0, 1, 2, 3, 4, 5].map(i => {
+                    const cx = 100 + i * 120;
+                    return (
+                      <g key={i}>
+                        <rect x={cx-25} y="100" width="50" height="40" rx="6" fill="var(--surface-2)" stroke="#ef4444" strokeWidth="1.5"/>
+                        <text x={cx} y="125" fill="#fff" fontSize="10" fontFamily="JetBrains Mono" textAnchor="middle">Conv</text>
+                      </g>
+                    );
+                  })}
+
+                  {/* ResNet Pipeline (Bottom) */}
+                  <text x="60" y="240" fill="#10b981" fontSize="13" fontFamily="JetBrains Mono" fontWeight="bold">RESNET (SKIP CONNECTIONS / IDENTITY HIGHWAY)</text>
+                  
+                  {/* Highway Skip Connection Arc */}
+                  <path d="M 100 270 Q 220 200 340 270" fill="none" stroke="#10b981" strokeWidth="3" filter="url(#g-green)"/>
+                  <path d="M 340 270 Q 460 200 580 270" fill="none" stroke="#10b981" strokeWidth="3" filter="url(#g-green)"/>
+
+                  <line x1="60" y1="300" x2="740" y2="300" stroke="#10b981" strokeWidth="2.5"/>
+
+                  {/* Layer Nodes ResNet */}
+                  {[0, 1, 2, 3, 4, 5].map(i => {
+                    const cx = 100 + i * 120;
+                    return (
+                      <g key={i}>
+                        <rect x={cx-25} y="280" width="50" height="40" rx="6" fill="var(--surface-2)" stroke="#10b981" strokeWidth="1.5"/>
+                        <text x={cx} y="305" fill="#fff" fontSize="10" fontFamily="JetBrains Mono" textAnchor="middle">Block</text>
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+
+              <div style={{color: 'var(--text-muted)', fontSize: '12px'}}>
+                Skip Connection Highway: <strong className="mono text-green">dL/dx = dL/dy * (1 + dF/dx)</strong>
+              </div>
+            </div>
+
+            {/* Right Metrics */}
+            <aside className="right">
+              <div className="sec-title">Gradient Magnitude Comparison</div>
+              
+              <div className="stat-card">
+                <div style={{fontSize: '11px', color: '#ef4444'}}>Plain CNN Layer 1 Gradient</div>
+                <div className="mono text-red" style={{fontSize: '18px', fontWeight: 'bold'}}>{plainGrad.toFixed(8)}</div>
+              </div>
+
+              <div className="stat-card">
+                <div style={{fontSize: '11px', color: '#10b981'}}>ResNet Layer 1 Gradient</div>
+                <div className="mono text-green" style={{fontSize: '18px', fontWeight: 'bold'}}>{resnetGrad.toFixed(4)}</div>
+              </div>
+
+              <div style={{background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.3)', padding: '12px', borderRadius: '8px', fontSize: '11px', lineHeight: '1.6'}}>
+                <strong>ResNet Identity Privilege:</strong>
+                <p style={{marginTop: '4px'}}>Because of the identity shortcut <code>y = F(x) + x</code>, backpropagation passes an un-attenuated gradient component of exactly 1.0 backward across every single block.</p>
+              </div>
+            </aside>
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

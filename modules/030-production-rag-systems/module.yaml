@@ -1,0 +1,13 @@
+id: "030"
+title: "Production RAG Systems"
+subtitle: "Evaluating, Operating, and Scaling RAG Beyond Prototypes"
+difficulty: "advanced"
+prerequisites: ["024", "025"]
+estimated_minutes: 210
+topics:
+  - "RAGAS evaluation framework"
+  - "RAG caching strategies"
+  - "Query classification and routing"
+  - "Index management and staleness"
+  - "Latency budget optimization"
+  - "Production observability"

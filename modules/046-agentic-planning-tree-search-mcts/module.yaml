@@ -1,0 +1,5 @@
+id: "046"
+title: "Agentic Planning & Tree Search (MCTS)"
+difficulty: "Advanced"
+prerequisites: ["026-agentic-loop-primitives", "027-multi-agent-orchestration"]
+estimated_minutes: 180

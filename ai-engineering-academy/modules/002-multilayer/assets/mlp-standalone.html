@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 002 — Multilayer Perceptron & Feature Space Warping</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #060610; --surface: #0d0d1a; --surface-2: #12122a;
+      --border: rgba(255,255,255,0.08); --blue: #00d4ff; --purple: #8b5cf6;
+      --green: #10b981; --red: #ef4444; --amber: #f59e0b;
+      --text: #e2e8f0; --text-muted: #64748b;
+      --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; height: 100vh; overflow: hidden; }
+    #root { height: 100%; }
+    .mono { font-family: var(--mono); }
+    .text-blue { color: var(--blue); } .text-purple { color: var(--purple); }
+    .text-green { color: var(--green); } .text-red { color: var(--red); } .text-amber { color: var(--amber); }
+    .text-muted { color: var(--text-muted); }
+
+    .app { display: flex; flex-direction: column; height: 100vh; }
+    header { background: #0a0a18; border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .badge { background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.4); color: var(--purple); font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+    
+    .phase-bar { display: flex; gap: 4px; padding: 8px 24px; background: #080814; border-bottom: 1px solid var(--border); }
+    .p-step { flex: 1; text-align: center; font-size: 10px; padding: 5px; border-radius: 6px; background: var(--surface-2); color: var(--text-muted); transition: all 0.3s; }
+    .p-step.active { background: rgba(139,92,246,0.18); color: var(--purple); border: 1px solid rgba(139,92,246,0.4); font-weight: 600; }
+
+    main { flex: 1; display: grid; grid-template-columns: 260px 1fr 300px; min-height: 0; }
+    aside { background: var(--surface); padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; border-right: 1px solid var(--border); }
+    aside.right { border-right: none; border-left: 1px solid var(--border); }
+
+    .sec-title { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .ctrl-row { margin-bottom: 8px; }
+    .ctrl-lbl { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; }
+    input[type=range] { width: 100%; accent-color: var(--purple); }
+
+    .presets { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 6px; font-family: var(--mono); font-size: 12px; cursor: pointer; }
+    .btn:hover { border-color: var(--purple); color: var(--purple); }
+    .btn-run { background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(0,212,255,0.2)); border-color: var(--purple); color: var(--purple); font-weight: 600; padding: 10px 24px; font-size: 13px; }
+
+    table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 11px; text-align: center; }
+    th { color: var(--text-muted); padding: 4px; border-bottom: 1px solid var(--border); }
+    td { padding: 4px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+    .center-stage { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 16px; background: var(--bg); }
+    .svg-wrap { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; }
+
+    .trace-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+    .pred-box { border: 2px solid; border-radius: 12px; padding: 16px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const PHASES = ['Input (x)', 'Layer 1 Wires', 'Hidden h1 (OR)', 'Hidden h2 (NAND)', 'Layer 2 Wires', 'Output ŷ (AND)'];
+    
+    function App() {
+      const [x1, setX1] = useState(1);
+      const [x2, setX2] = useState(0);
+      const [phase, setPhase] = useState(5);
+      const [playing, setPlaying] = useState(false);
+      const timerRef = useRef(null);
+
+      // Hardcoded 2-2-1 XOR Weights
+      const h1_z = x1 + x2 - 0.5;          // OR
+      const h1   = h1_z >= 0 ? 1 : 0;
+      
+      const h2_z = -x1 - x2 + 1.5;        // NAND
+      const h2   = h2_z >= 0 ? 1 : 0;
+
+      const y_z  = h1 + h2 - 1.5;         // AND on hidden space
+      const pred = y_z >= 0 ? 1 : 0;
+
+      const targetXOR = (x1 === 0 && x2 === 0) || (x1 === 1 && x2 === 1) ? 0 : 1;
+      const outColor  = pred === targetXOR ? '#10b981' : '#ef4444';
+
+      const runAnim = () => {
+        clearInterval(timerRef.current);
+        setPhase(0);
+        setPlaying(true);
+        let p = 0;
+        timerRef.current = setInterval(() => {
+          p++;
+          if (p >= PHASES.length) { clearInterval(timerRef.current); setPlaying(false); }
+          else { setPhase(p); }
+        }, 900);
+      };
+
+      const setPresetCase = (a, b) => {
+        setX1(a); setX2(b);
+        runAnim();
+      };
+
+      return (
+        <div className="app">
+          <header>
+            <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+              <span className="badge">MODULE 002</span>
+              <h2 style={{fontSize: '18px', color: '#fff'}}>2-2-1 Multilayer Perceptron (XOR Solver)</h2>
+            </div>
+            <div style={{display: 'flex', gap: '10px', alignItems: 'center', background: pred === targetXOR ? 'rgba(16,185,129,0.12)' : 'rgba(239,68,68,0.12)', border: `1px solid ${outColor}`, padding: '4px 12px', borderRadius: '8px', color: outColor}}>
+              <span style={{fontSize: '10px', letterSpacing: '1px'}}>XOR OUTPUT</span>
+              <strong className="mono" style={{fontSize: '16px'}}>ŷ = {pred} (Target = {targetXOR})</strong>
+            </div>
+          </header>
+
+          <div className="phase-bar">
+            {PHASES.map((lbl, i) => (
+              <div key={lbl} className={`p-step ${i <= phase ? 'active' : ''}`}>{lbl}</div>
+            ))}
+          </div>
+
+          <main>
+            {/* Left Controls */}
+            <aside>
+              <div>
+                <div className="sec-title">Inputs</div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-blue">x₁</span><span className="mono">{x1}</span></div>
+                  <input type="range" min="0" max="1" step="1" value={x1} onChange={e => {setX1(+e.target.value); runAnim();}}/>
+                </div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-blue">x₂</span><span className="mono">{x2}</span></div>
+                  <input type="range" min="0" max="1" step="1" value={x2} onChange={e => {setX2(+e.target.value); runAnim();}}/>
+                </div>
+              </div>
+
+              <div>
+                <div className="sec-title">XOR Test Cases</div>
+                <div className="presets">
+                  <button className="btn" onClick={() => setPresetCase(0,0)}>(0, 0) → 0</button>
+                  <button className="btn" onClick={() => setPresetCase(0,1)}>(0, 1) → 1</button>
+                  <button className="btn" onClick={() => setPresetCase(1,0)}>(1, 0) → 1</button>
+                  <button className="btn" onClick={() => setPresetCase(1,1)}>(1, 1) → 0</button>
+                </div>
+              </div>
+
+              <div>
+                <div className="sec-title">Hidden Space Mapping</div>
+                <table>
+                  <thead><tr><th>x₁,x₂</th><th>h₁ (OR)</th><th>h₂ (NAND)</th><th>ŷ</th></tr></thead>
+                  <tbody>
+                    {[[0,0],[0,1],[1,0],[1,1]].map(([a,b]) => {
+                      const hz1 = a + b - 0.5; const th1 = hz1 >= 0 ? 1 : 0;
+                      const hz2 = -a - b + 1.5; const th2 = hz2 >= 0 ? 1 : 0;
+                      const yz = th1 + th2 - 1.5; const tp = yz >= 0 ? 1 : 0;
+                      const activeRow = a === x1 && b === x2;
+                      return (
+                        <tr key={`${a}${b}`} style={{background: activeRow ? 'rgba(139,92,246,0.15)' : 'transparent'}}>
+                          <td>({a},{b})</td>
+                          <td style={{color: '#00d4ff'}}>{th1}</td>
+                          <td style={{color: '#f59e0b'}}>{th2}</td>
+                          <td style={{color: (a^b)===tp ? '#10b981' : '#ef4444', fontWeight: 'bold'}}>{tp}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </aside>
+
+            {/* Center Stage Network SVG */}
+            <div className="center-stage">
+              <div className="svg-wrap">
+                <svg viewBox="0 0 840 500" style={{width: '100%', height: '100%', maxWidth: 840}}>
+                  <defs>
+                    <filter id="g-blue"><feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#00d4ff" floodOpacity="0.8"/></filter>
+                    <filter id="g-purple"><feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#8b5cf6" floodOpacity="0.8"/></filter>
+                    <filter id="g-green"><feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#10b981" floodOpacity="0.8"/></filter>
+                    <filter id="g-amber"><feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#f59e0b" floodOpacity="0.8"/></filter>
+
+                    <path id="pw1" d="M 120,160 L 410,160"/>
+                    <path id="pw2" d="M 120,160 L 410,340"/>
+                    <path id="pw3" d="M 120,340 L 410,160"/>
+                    <path id="pw4" d="M 120,340 L 410,340"/>
+
+                    <path id="phw1" d="M 470,160 L 710,250"/>
+                    <path id="phw2" d="M 470,340 L 710,250"/>
+                  </defs>
+
+                  {/* Layer 1 Wires */}
+                  {phase >= 1 && (
+                    <g strokeWidth="2" opacity="0.6">
+                      <line x1="120" y1="160" x2="410" y2="160" stroke="#00d4ff"/>
+                      <line x1="120" y1="160" x2="410" y2="340" stroke="#f59e0b"/>
+                      <line x1="120" y1="340" x2="410" y2="160" stroke="#00d4ff"/>
+                      <line x1="120" y1="340" x2="410" y2="340" stroke="#f59e0b"/>
+                    </g>
+                  )}
+
+                  {/* Layer 2 Wires */}
+                  {phase >= 4 && (
+                    <g strokeWidth="2.5" opacity="0.8">
+                      <line x1="470" y1="160" x2="710" y2="250" stroke="#8b5cf6"/>
+                      <line x1="470" y1="340" x2="710" y2="250" stroke="#8b5cf6"/>
+                    </g>
+                  )}
+
+                  {/* Signal Animations */}
+                  {phase >= 1 && (
+                    <g>
+                      <circle r="5" fill="#00d4ff" filter="url(#g-blue)"><animateMotion dur="1s" repeatCount="indefinite" begin="0s"><mpath href="#pw1"/></animateMotion></circle>
+                      <circle r="5" fill="#f59e0b" filter="url(#g-amber)"><animateMotion dur="1s" repeatCount="indefinite" begin="0.2s"><mpath href="#pw2"/></animateMotion></circle>
+                      <circle r="5" fill="#00d4ff" filter="url(#g-blue)"><animateMotion dur="1s" repeatCount="indefinite" begin="0.4s"><mpath href="#pw3"/></animateMotion></circle>
+                      <circle r="5" fill="#f59e0b" filter="url(#g-amber)"><animateMotion dur="1s" repeatCount="indefinite" begin="0.6s"><mpath href="#pw4"/></animateMotion></circle>
+                    </g>
+                  )}
+
+                  {phase >= 4 && (
+                    <g>
+                      <circle r="6" fill="#8b5cf6" filter="url(#g-purple)"><animateMotion dur="0.9s" repeatCount="indefinite" begin="0s"><mpath href="#phw1"/></animateMotion></circle>
+                      <circle r="6" fill="#8b5cf6" filter="url(#g-purple)"><animateMotion dur="0.9s" repeatCount="indefinite" begin="0.3s"><mpath href="#phw2"/></animateMotion></circle>
+                    </g>
+                  )}
+
+                  {/* Input Nodes */}
+                  <g textAnchor="middle">
+                    <circle cx="90" cy="160" r="30" fill="rgba(0,212,255,0.12)" stroke="#00d4ff" strokeWidth="2" filter="url(#g-blue)"/>
+                    <text x="90" y="156" fill="#00d4ff" fontSize="13" fontWeight="600">x₁</text>
+                    <text x="90" y="172" fill="#fff" fontSize="11" fontFamily="JetBrains Mono">{x1}</text>
+
+                    <circle cx="90" cy="340" r="30" fill="rgba(0,212,255,0.12)" stroke="#00d4ff" strokeWidth="2" filter="url(#g-blue)"/>
+                    <text x="90" y="336" fill="#00d4ff" fontSize="13" fontWeight="600">x₂</text>
+                    <text x="90" y="352" fill="#fff" fontSize="11" fontFamily="JetBrains Mono">{x2}</text>
+                  </g>
+
+                  {/* Hidden Nodes */}
+                  {phase >= 2 && (
+                    <g textAnchor="middle">
+                      <circle cx="440" cy="160" r="32" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" strokeWidth="2.5" filter="url(#g-blue)"/>
+                      <text x="440" y="154" fill="#00d4ff" fontSize="12" fontWeight="600">h₁ (OR)</text>
+                      <text x="440" y="170" fill="#fff" fontSize="12" fontFamily="JetBrains Mono" fontWeight="bold">{h1}</text>
+
+                      <circle cx="440" cy="340" r="32" fill="rgba(245,158,11,0.15)" stroke="#f59e0b" strokeWidth="2.5" filter="url(#g-amber)"/>
+                      <text x="440" y="334" fill="#f59e0b" fontSize="11" fontWeight="600">h₂ (NAND)</text>
+                      <text x="440" y="350" fill="#fff" fontSize="12" fontFamily="JetBrains Mono" fontWeight="bold">{h2}</text>
+                    </g>
+                  )}
+
+                  {/* Output Node */}
+                  {phase >= 5 && (
+                    <g textAnchor="middle">
+                      <circle cx="750" cy="250" r="38" fill={pred===targetXOR ? 'rgba(16,185,129,0.18)' : 'rgba(239,68,68,0.18)'} stroke={outColor} strokeWidth="3" filter="url(#g-green)"/>
+                      <text x="750" y="242" fill={outColor} fontSize="13" fontWeight="600">ŷ (AND)</text>
+                      <text x="750" y="264" fill={outColor} fontSize="26" fontWeight="bold" fontFamily="JetBrains Mono">{pred}</text>
+                    </g>
+                  )}
+
+                  {/* Labels */}
+                  <text x="90" y="440" fill="rgba(255,255,255,0.2)" fontSize="10" letterSpacing="2" textAnchor="middle">INPUT LAYER</text>
+                  <text x="440" y="440" fill="rgba(255,255,255,0.2)" fontSize="10" letterSpacing="2" textAnchor="middle">HIDDEN LAYER (FEATURE SPACE)</text>
+                  <text x="750" y="440" fill="rgba(255,255,255,0.2)" fontSize="10" letterSpacing="2" textAnchor="middle">OUTPUT LAYER</text>
+                </svg>
+              </div>
+
+              <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+                <button className="btn btn-run" onClick={runAnim}>{playing ? 'Stop' : '▶ Run Forward Pass'}</button>
+                <span style={{color: 'var(--text-muted)', fontSize: '12px'}}>Stage: <strong className="mono text-purple">{PHASES[phase]}</strong></span>
+              </div>
+            </div>
+
+            {/* Right Trace */}
+            <aside className="right">
+              <div className="sec-title">Forward Pass Trace</div>
+              
+              <div className="trace-card">
+                <div style={{fontSize: '11px', color: '#00d4ff', fontWeight: '600', marginBottom: '4px'}}>Hidden Neuron h₁ (OR)</div>
+                <div className="mono" style={{fontSize: '12px'}}>
+                  z₁ = {x1} + {x2} - 0.5 = <strong className="text-blue">{h1_z.toFixed(1)}</strong>
+                </div>
+                <div className="mono" style={{fontSize: '12px', marginTop: '2px'}}>
+                  h₁ = Step({h1_z.toFixed(1)}) = <strong className="text-blue">{h1}</strong>
+                </div>
+              </div>
+
+              <div className="trace-card">
+                <div style={{fontSize: '11px', color: '#f59e0b', fontWeight: '600', marginBottom: '4px'}}>Hidden Neuron h₂ (NAND)</div>
+                <div className="mono" style={{fontSize: '12px'}}>
+                  z₂ = -{x1} - {x2} + 1.5 = <strong className="text-amber">{h2_z.toFixed(1)}</strong>
+                </div>
+                <div className="mono" style={{fontSize: '12px', marginTop: '2px'}}>
+                  h₂ = Step({h2_z.toFixed(1)}) = <strong className="text-amber">{h2}</strong>
+                </div>
+              </div>
+
+              <div className="trace-card">
+                <div style={{fontSize: '11px', color: '#8b5cf6', fontWeight: '600', marginBottom: '4px'}}>Output Neuron ŷ (AND on h)</div>
+                <div className="mono" style={{fontSize: '12px'}}>
+                  z_out = {h1} + {h2} - 1.5 = <strong className="text-purple">{y_z.toFixed(1)}</strong>
+                </div>
+                <div className="mono" style={{fontSize: '12px', marginTop: '2px'}}>
+                  ŷ = Step({y_z.toFixed(1)}) = <strong className="text-purple">{pred}</strong>
+                </div>
+              </div>
+
+              <div className="pred-box" style={{borderColor: outColor, background: `${outColor}10`}}>
+                <div style={{fontSize: '10px', letterSpacing: '2px', color: outColor, fontWeight: '600', marginBottom: '4px'}}>CLASSIFICATION</div>
+                <div className="mono" style={{fontSize: '32px', fontWeight: 'bold', color: outColor}}>ŷ = {pred}</div>
+                <div style={{fontSize: '11px', color: outColor, marginTop: '2px'}}>
+                  {pred === targetXOR ? '✓ MATCHES XOR TARGET' : '❌ MISMATCH'}
+                </div>
+              </div>
+            </aside>
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

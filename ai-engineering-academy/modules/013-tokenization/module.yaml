@@ -1,0 +1,31 @@
+id: 013-tokenization
+title: "Subword Tokenization (Byte-Pair Encoding, WordPiece & Unigram)"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "010-attention"
+  - "011-transformer"
+  - "012-bert-gpt-pretraining"
+estimated_minutes: 85
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-01"
+
+summary: >
+  Implements Byte-Pair Encoding (BPE), WordPiece, and Unigram tokenization algorithms
+  from scratch in pure Python. Covers vocabulary training, tokenization, decoding,
+  and special token handling ([UNK], [PAD], [CLS], [SEP], <|endoftext|>).
+
+outcomes:
+  - "Implement BPE vocabulary trainer and tokenizer from scratch"
+  - "Implement WordPiece score calculation and tokenization from scratch"
+  - "Implement Unigram Viterbi segmentation and pruning"
+  - "Compare tokenization efficiency across languages and subword algorithms"
+
+sources:
+  - name: "Sennrich et al. (2016) Neural Machine Translation of Rare Words with Subword Units"
+    url: "https://arxiv.org/abs/1508.07909"
+    type: "Paper"
+  - name: "Kudo (2018) Subword Regularization: Improving Neural Network Translation Models with Multiple Subword Candidates"
+    url: "https://arxiv.org/abs/1804.10959"
+    type: "Paper"

@@ -1,0 +1,30 @@
+id: 014-positional-encodings
+title: "Advanced Positional Encodings (RoPE, ALiBi, Relative Positional Embeddings)"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "010-attention"
+  - "011-transformer"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements modern positional encoding techniques from scratch in pure Python & NumPy:
+  Rotary Position Embeddings (RoPE), Attention with Linear Biases (ALiBi),
+  and Relative Positional Encodings (Shaw et al. / T5).
+
+outcomes:
+  - "Implement RoPE (Rotary Position Embeddings) complex 2D rotation matrix from scratch"
+  - "Implement ALiBi (Attention with Linear Biases) distance penalty matrix"
+  - "Implement Relative Position Bias (T5 style) lookup tables"
+  - "Derive why relative position encodings extrapolate better to unseen sequence lengths than absolute encodings"
+
+sources:
+  - name: "Su et al. (2021) RoFormer: Enhanced Transformer with Rotary Position Embedding"
+    url: "https://arxiv.org/abs/2104.09864"
+    type: "Paper"
+  - name: "Press et al. (2022) Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation (ALiBi)"
+    url: "https://arxiv.org/abs/2108.12409"
+    type: "Paper"

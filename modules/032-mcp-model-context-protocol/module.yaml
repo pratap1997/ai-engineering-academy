@@ -1,0 +1,10 @@
+id: "032-mcp-model-context-protocol"
+title: "Model Context Protocol (MCP)"
+difficulty: "Intermediate"
+prerequisites:
+  - "026-agentic-loop-primitives"
+  - "027-multi-agent-orchestration"
+estimated_minutes: 120
+sources:
+  - url: "https://modelcontextprotocol.io/"
+    description: "Official MCP Spec"

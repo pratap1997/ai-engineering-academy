@@ -1,0 +1,31 @@
+id: 012-bert-gpt-pretraining
+title: "BERT & GPT Pre-training Objectives"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "010-attention"
+  - "011-transformer"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-01"
+
+summary: >
+  Implements the two foundational pre-training paradigms from scratch in pure NumPy:
+  BERT's Masked Language Modeling (MLM) + Next Sentence Prediction (NSP),
+  and GPT's Causal Language Modeling (CLM). Covers tokenization strategies,
+  embedding tables, and the pre-train → fine-tune transfer paradigm.
+
+outcomes:
+  - "Implement MLM masking logic with 80/10/10 replacement strategy"
+  - "Implement causal language model loss (cross-entropy over next tokens)"
+  - "Explain the difference between bidirectional (BERT) and causal (GPT) attention"
+  - "Describe the pre-train → fine-tune paradigm and why it works"
+
+sources:
+  - name: "Devlin et al. (2019) BERT: Pre-training of Deep Bidirectional Transformers"
+    url: "https://arxiv.org/abs/1810.04805"
+    type: "Paper"
+  - name: "Radford et al. (2019) Language Models are Unsupervised Multitask Learners (GPT-2)"
+    url: "https://openai.com/research/language-unsupervised"
+    type: "Paper"

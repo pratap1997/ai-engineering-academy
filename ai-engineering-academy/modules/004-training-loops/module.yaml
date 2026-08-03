@@ -1,0 +1,34 @@
+id: 004-training-loops
+title: "Optimizers, Learning Rates & Training Loops"
+version: "1.0.0"
+difficulty: "Intermediate"
+prerequisites:
+  - "001-perceptron"
+  - "002-multilayer"
+  - "003-backprop"
+estimated_minutes: 80
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-01"
+
+summary: >
+  Implements SGD, Momentum, RMSprop, Adam, and AdamW optimizers from scratch,
+  explores loss landscape traversal, and builds production training loops with
+  mini-batching, Cosine Annealing, and Early Stopping.
+
+outcomes:
+  - "Implement SGD, Momentum, RMSprop, Adam, and AdamW optimizers in pure Python & NumPy"
+  - "Explain bias correction in Adam and decoupled weight decay in AdamW mathematically"
+  - "Build a production-grade Trainer class with mini-batching, Cosine Annealing, and Early Stopping"
+  - "Compare optimizer convergence speeds across ill-conditioned loss landscapes (Rosenbrock / Beale functions)"
+
+sources:
+  - name: "Kingma & Ba (2014) Adam: A Method for Stochastic Optimization"
+    url: "https://arxiv.org/abs/1412.6980"
+    type: "Paper"
+  - name: "Loshchilov & Hutter (2017) Decoupled Weight Decay Regularization (AdamW)"
+    url: "https://arxiv.org/abs/1711.05101"
+    type: "Paper"
+  - name: "Sutskever et al. (2013) On the importance of initialization and momentum in deep learning"
+    url: "http://proceedings.mlr.press/v28/sutskever13.html"
+    type: "Paper"

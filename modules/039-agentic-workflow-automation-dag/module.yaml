@@ -1,0 +1,6 @@
+id: "039"
+title: "Agentic Workflow Automation & DAGs"
+difficulty: "Advanced"
+prerequisites: ["026-agentic-loop-primitives", "027-multi-agent-orchestration"]
+estimated_minutes: 180
+description: "Master the implementation of State Graphs, Directed Acyclic Graphs, Retry/Rollback, and Human-in-the-Loop workflows."

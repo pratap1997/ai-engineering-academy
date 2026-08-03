@@ -1,0 +1,7 @@
+id: 034
+title: "Preference Alignment & RLHF (PPO vs DPO)"
+difficulty: advanced
+prerequisites:
+  - 012-bert-gpt-pretraining
+  - 026-agentic-loop-primitives
+estimated_minutes: 180

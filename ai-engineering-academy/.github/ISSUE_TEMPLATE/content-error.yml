@@ -1,0 +1,55 @@
+name: Report a Content Error
+description: Report a factual, mathematical, code, or teaching mistake
+title: "[ERROR] "
+labels: ["errata", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to report a technical or educational mistake.
+        A content error is different from a confusing explanation — it is something
+        that is factually wrong, mathematically incorrect, or produces the wrong result.
+
+  - type: input
+    id: module
+    attributes:
+      label: Module
+      description: Which module? (e.g., 001-perceptron)
+      placeholder: 001-perceptron
+    validations:
+      required: true
+
+  - type: input
+    id: artifact
+    attributes:
+      label: Affected artifact
+      description: Which file? (e.g., 03-mathematics.md, 04-implementation.py)
+      placeholder: 03-mathematics.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_content
+    attributes:
+      label: Current content (what it says now)
+      description: Quote the exact text, code, or equation that is wrong.
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Why it is wrong
+      description: >
+        Explain the error. Include a source, derivation, or reproduction
+        that shows the content is incorrect.
+    validations:
+      required: true
+
+  - type: textarea
+    id: correction
+    attributes:
+      label: Proposed correction
+      description: What should it say or do instead?
+    validations:
+      required: true

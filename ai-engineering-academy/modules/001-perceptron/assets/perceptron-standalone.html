@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perceptron Forward Pass — AI Engineering Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- React & Framer Motion CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #060610; --surface: #0d0d1a; --surface-2: #12122a;
+      --border: rgba(255,255,255,0.08); --blue: #00d4ff; --purple: #8b5cf6;
+      --green: #10b981; --red: #ef4444; --amber: #f59e0b;
+      --text: #e2e8f0; --text-muted: #64748b;
+      --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; height: 100vh; overflow: hidden; }
+    #root { height: 100%; }
+    .mono { font-family: var(--mono); }
+    .text-blue { color: var(--blue); } .text-purple { color: var(--purple); }
+    .text-green { color: var(--green); } .text-red { color: var(--red); } .text-amber { color: var(--amber); }
+    .text-muted { color: var(--text-muted); }
+
+    .app { display: flex; flex-direction: column; height: 100vh; }
+    header { background: #0a0a18; border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .badge { background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); color: var(--blue); font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+    
+    .phase-bar { display: flex; gap: 4px; padding: 10px 24px; background: #080814; border-bottom: 1px solid var(--border); }
+    .p-step { flex: 1; text-align: center; font-size: 10px; padding: 6px; border-radius: 6px; background: var(--surface-2); color: var(--text-muted); transition: all 0.3s; }
+    .p-step.active { background: rgba(0,212,255,0.15); color: var(--blue); border: 1px solid rgba(0,212,255,0.4); font-weight: 600; }
+
+    main { flex: 1; display: grid; grid-template-columns: 260px 1fr 280px; min-height: 0; }
+    aside { background: var(--surface); padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; border-right: 1px solid var(--border); }
+    aside.right { border-right: none; border-left: 1px solid var(--border); }
+
+    .sec-title { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .ctrl-row { margin-bottom: 10px; }
+    .ctrl-lbl { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+    input[type=range] { width: 100%; accent-color: var(--blue); }
+
+    .presets { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 6px; font-family: var(--mono); font-size: 12px; cursor: pointer; }
+    .btn:hover { border-color: var(--blue); color: var(--blue); }
+    .btn-run { background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(139,92,246,0.2)); border-color: var(--blue); color: var(--blue); font-weight: 600; padding: 10px 24px; font-size: 13px; }
+
+    table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; text-align: center; }
+    th { color: var(--text-muted); padding: 4px; border-bottom: 1px solid var(--border); }
+    td { padding: 5px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+    .center-stage { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 16px; background: var(--bg); }
+    .svg-wrap { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; }
+
+    .trace-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+    .pred-box { border: 2px solid; border-radius: 12px; padding: 20px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const PHASES = ['Inputs', 'Wires', 'Weights', 'Signal', 'Sum', 'Step f(z)', 'Output ŷ'];
+    const P = { x1: {x: 90, y: 145}, x2: {x: 90, y: 295}, bias: {x: 90, y: 445}, sum: {x: 430, y: 220}, step: {x: 600, y: 220}, out: {x: 750, y: 220} };
+
+    function App() {
+      const [x1, setX1] = useState(1);
+      const [x2, setX2] = useState(1);
+      const [w1, setW1] = useState(0.5);
+      const [w2, setW2] = useState(0.5);
+      const [b, setB]   = useState(-0.7);
+      const [phase, setPhase] = useState(6);
+      const [playing, setPlaying] = useState(false);
+      const timerRef = useRef(null);
+
+      const z = w1 * x1 + w2 * x2 + b;
+      const pred = z >= 0 ? 1 : 0;
+      const outColor = pred === 1 ? '#10b981' : '#ef4444';
+
+      const runAnim = () => {
+        clearInterval(timerRef.current);
+        setPhase(0);
+        setPlaying(true);
+        let p = 0;
+        timerRef.current = setInterval(() => {
+          p++;
+          if (p >= PHASES.length) { clearInterval(timerRef.current); setPlaying(false); }
+          else { setPhase(p); }
+        }, 900);
+      };
+
+      const setPreset = (name) => {
+        const presets = {
+          AND:  {w1: 0.5, w2: 0.5, b: -0.7, x1: 1, x2: 1},
+          OR:   {w1: 0.6, w2: 0.6, b: -0.3, x1: 0, x2: 1},
+          NAND: {w1:-0.5, w2:-0.5, b:  0.7, x1: 1, x2: 1},
+          XOR:  {w1: 0.5, w2: 0.5, b: -0.3, x1: 1, x2: 0}
+        };
+        const p = presets[name];
+        setW1(p.w1); setW2(p.w2); setB(p.b); setX1(p.x1); setX2(p.x2);
+        runAnim();
+      };
+
+      return (
+        <div className="app">
+          <header>
+            <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+              <span className="badge">MODULE 001</span>
+              <h2 style={{fontSize: '18px', color: '#fff'}}>Perceptron Forward Pass</h2>
+            </div>
+            <div style={{display: 'flex', gap: '10px', alignItems: 'center', background: pred ? 'rgba(16,185,129,0.12)' : 'rgba(239,68,68,0.12)', border: `1px solid ${outColor}`, padding: '4px 12px', borderRadius: '8px', color: outColor}}>
+              <span style={{fontSize: '10px', letterSpacing: '1px'}}>PREDICTION</span>
+              <strong className="mono" style={{fontSize: '16px'}}>ŷ = {pred}</strong>
+            </div>
+          </header>
+
+          <div className="phase-bar">
+            {PHASES.map((lbl, i) => (
+              <div key={lbl} className={`p-step ${i <= phase ? 'active' : ''}`}>{lbl}</div>
+            ))}
+          </div>
+
+          <main>
+            {/* Left Controls */}
+            <aside>
+              <div>
+                <div className="sec-title">Inputs</div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-blue">x₁</span><span className="mono">{x1}</span></div>
+                  <input type="range" min="0" max="1" step="0.1" value={x1} onChange={e => {setX1(+e.target.value); runAnim();}}/>
+                </div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-blue">x₂</span><span className="mono">{x2}</span></div>
+                  <input type="range" min="0" max="1" step="0.1" value={x2} onChange={e => {setX2(+e.target.value); runAnim();}}/>
+                </div>
+              </div>
+
+              <div>
+                <div className="sec-title">Parameters</div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-purple">w₁</span><span className="mono">{w1.toFixed(2)}</span></div>
+                  <input type="range" min="-2" max="2" step="0.05" value={w1} onChange={e => {setW1(+e.target.value); runAnim();}}/>
+                </div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-purple">w₂</span><span className="mono">{w2.toFixed(2)}</span></div>
+                  <input type="range" min="-2" max="2" step="0.05" value={w2} onChange={e => {setW2(+e.target.value); runAnim();}}/>
+                </div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-amber">b (bias)</span><span className="mono">{b.toFixed(2)}</span></div>
+                  <input type="range" min="-2" max="2" step="0.05" value={b} onChange={e => {setB(+e.target.value); runAnim();}}/>
+                </div>
+              </div>
+
+              <div>
+                <div className="sec-title">Presets</div>
+                <div className="presets">
+                  {['AND', 'OR', 'NAND', 'XOR'].map(name => (
+                    <button key={name} className="btn" onClick={() => setPreset(name)}>{name}</button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="sec-title">Truth Table</div>
+                <table>
+                  <thead><tr><th>x₁</th><th>x₂</th><th>z</th><th>ŷ</th></tr></thead>
+                  <tbody>
+                    {[[0,0],[0,1],[1,0],[1,1]].map(([a,b_in]) => {
+                      const cz = w1*a + w2*b_in + b;
+                      const cp = cz >= 0 ? 1 : 0;
+                      return (
+                        <tr key={`${a}${b_in}`}>
+                          <td>{a}</td><td>{b_in}</td>
+                          <td style={{color: cz>=0 ? '#8b5cf6' : '#64748b'}}>{cz.toFixed(2)}</td>
+                          <td style={{color: cp ? '#10b981' : '#ef4444', fontWeight: 'bold'}}>{cp}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </aside>
+
+            {/* Center Stage SVG */}
+            <div className="center-stage">
+              <div className="svg-wrap">
+                <svg viewBox="0 0 840 530" style={{width: '100%', height: '100%', maxWidth: 840}}>
+                  <defs>
+                    <filter id="g-blue"><feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#00d4ff" floodOpacity="0.8"/></filter>
+                    <filter id="g-purple"><feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#8b5cf6" floodOpacity="0.8"/></filter>
+                    <filter id="g-green"><feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#10b981" floodOpacity="0.8"/></filter>
+                    <filter id="g-red"><feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#ef4444" floodOpacity="0.8"/></filter>
+                    <filter id="g-amber"><feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#f59e0b" floodOpacity="0.8"/></filter>
+
+                    <path id="p1" d={`M 118,145 C 260,145 260,220 400,220`}/>
+                    <path id="p2" d={`M 118,295 C 260,295 260,220 400,220`}/>
+                    <path id="p3" d={`M 90,423 L 402,234`}/>
+                    <path id="p4" d={`M 462,220 L 568,220`}/>
+                    <path id="p5" d={`M 632,220 L 710,220`}/>
+                  </defs>
+
+                  {/* Wires */}
+                  {phase >= 1 && (
+                    <g fill="none" strokeWidth="2.5">
+                      <path d="M 118,145 C 260,145 260,220 400,220" stroke="#00d4ff" opacity="0.6"/>
+                      <path d="M 118,295 C 260,295 260,220 400,220" stroke="#00d4ff" opacity="0.6"/>
+                      <path d="M 90,423 L 402,234" stroke="#f59e0b" opacity="0.5"/>
+                    </g>
+                  )}
+                  {phase >= 4 && <path d="M 462,220 L 568,220" fill="none" stroke="#8b5cf6" strokeWidth="3" opacity="0.8"/>}
+                  {phase >= 5 && <path d="M 632,220 L 710,220" fill="none" stroke={outColor} strokeWidth="3" opacity="0.9"/>}
+
+                  {/* Animated Signal Particles */}
+                  {phase >= 3 && (
+                    <g>
+                      <circle r="6" fill="#00d4ff" filter="url(#g-blue)"><animateMotion dur="1s" repeatCount="indefinite" begin="0s"><mpath href="#p1"/></animateMotion></circle>
+                      <circle r="6" fill="#00d4ff" filter="url(#g-blue)"><animateMotion dur="1s" repeatCount="indefinite" begin="0.3s"><mpath href="#p2"/></animateMotion></circle>
+                      <circle r="5" fill="#f59e0b" filter="url(#g-amber)"><animateMotion dur="1.2s" repeatCount="indefinite" begin="0.5s"><mpath href="#p3"/></animateMotion></circle>
+                    </g>
+                  )}
+                  {phase >= 4 && <circle r="6" fill="#8b5cf6" filter="url(#g-purple)"><animateMotion dur="0.8s" repeatCount="indefinite"><mpath href="#p4"/></animateMotion></circle>}
+                  {phase >= 5 && <circle r="6" fill={outColor} filter={`url(#g-${pred?'green':'red'})`}><animateMotion dur="0.8s" repeatCount="indefinite"><mpath href="#p5"/></animateMotion></circle>}
+
+                  {/* Weight Badges */}
+                  {phase >= 2 && (
+                    <g fontFamily="JetBrains Mono" fontSize="11" fill="#00d4ff" textAnchor="middle">
+                      <rect x="215" y="122" width="75" height="22" rx="6" fill="#12122a" stroke="rgba(0,212,255,0.3)"/>
+                      <text x="252" y="137">w1={w1.toFixed(2)}</text>
+                      <rect x="215" y="302" width="75" height="22" rx="6" fill="#12122a" stroke="rgba(0,212,255,0.3)"/>
+                      <text x="252" y="317">w2={w2.toFixed(2)}</text>
+                    </g>
+                  )}
+
+                  {/* Input Nodes */}
+                  {phase >= 0 && (
+                    <g textAnchor="middle">
+                      <circle cx="90" cy="145" r="28" fill="rgba(0,212,255,0.12)" stroke="#00d4ff" strokeWidth="2" filter="url(#g-blue)"/>
+                      <text x="90" y="141" fill="#00d4ff" fontSize="13" fontWeight="600">x₁</text>
+                      <text x="90" y="157" fill="#fff" fontSize="11" fontFamily="JetBrains Mono">{x1}</text>
+
+                      <circle cx="90" cy="295" r="28" fill="rgba(0,212,255,0.12)" stroke="#00d4ff" strokeWidth="2" filter="url(#g-blue)"/>
+                      <text x="90" y="291" fill="#00d4ff" fontSize="13" fontWeight="600">x₂</text>
+                      <text x="90" y="307" fill="#fff" fontSize="11" fontFamily="JetBrains Mono">{x2}</text>
+
+                      <circle cx="90" cy="445" r="24" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" strokeWidth="2" filter="url(#g-amber)"/>
+                      <text x="90" y="441" fill="#f59e0b" fontSize="12" fontWeight="600">b</text>
+                      <text x="90" y="455" fill="#fff" fontSize="10" fontFamily="JetBrains Mono">{b.toFixed(2)}</text>
+                    </g>
+                  )}
+
+                  {/* Sum Node */}
+                  {phase >= 4 && (
+                    <g textAnchor="middle">
+                      <circle cx="430" cy="220" r="36" fill="rgba(139,92,246,0.18)" stroke="#8b5cf6" strokeWidth="2.5" filter="url(#g-purple)"/>
+                      <text x="430" y="214" fill="#8b5cf6" fontSize="20" fontWeight="bold">Σ</text>
+                      <text x="430" y="232" fill="#fff" fontSize="11" fontFamily="JetBrains Mono">{z.toFixed(3)}</text>
+                    </g>
+                  )}
+
+                  {/* Step Node */}
+                  {phase >= 5 && (
+                    <g textAnchor="middle">
+                      <rect x="568" y="188" width="64" height="64" rx="10" fill="rgba(139,92,246,0.15)" stroke="#8b5cf6" strokeWidth="2" filter="url(#g-purple)"/>
+                      <text x="600" y="212" fill="#8b5cf6" fontSize="12" fontWeight="600">f(z)</text>
+                      <text x="600" y="232" fill={z>=0?'#10b981':'#ef4444'} fontSize="12" fontFamily="JetBrains Mono">{z>=0?'≥ 0':'< 0'}</text>
+                    </g>
+                  )}
+
+                  {/* Output Node */}
+                  {phase >= 6 && (
+                    <g textAnchor="middle">
+                      <circle cx="750" cy="220" r="36" fill={pred?'rgba(16,185,129,0.18)':'rgba(239,68,68,0.18)'} stroke={outColor} strokeWidth="3" filter={`url(#g-${pred?'green':'red'})`}/>
+                      <text x="750" y="212" fill={outColor} fontSize="12" fontWeight="600">ŷ</text>
+                      <text x="750" y="234" fill={outColor} fontSize="24" fontWeight="bold" fontFamily="JetBrains Mono">{pred}</text>
+                    </g>
+                  )}
+                </svg>
+              </div>
+
+              <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+                <button className="btn btn-run" onClick={runAnim}>{playing ? 'Stop' : '▶ Run Animation'}</button>
+                <span style={{color: 'var(--text-muted)', fontSize: '12px'}}>Phase: <strong className="mono text-blue">{PHASES[phase]}</strong></span>
+              </div>
+            </div>
+
+            {/* Right Trace */}
+            <aside className="right">
+              <div className="sec-title">Computation Trace</div>
+              
+              <div className="trace-card">
+                <div style={{fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px'}}>Linear Sum z = w·x + b</div>
+                <div className="mono" style={{fontSize: '12px', lineHeight: '1.8'}}>
+                  (<span className="text-purple">{w1.toFixed(2)}</span> × <span className="text-blue">{x1}</span>) + (<span className="text-purple">{w2.toFixed(2)}</span> × <span className="text-blue">{x2}</span>) + (<span className="text-amber">{b.toFixed(2)}</span>)
+                </div>
+                <div style={{marginTop: '8px', paddingTop: '8px', borderTop: '1px solid var(--border)', fontSize: '15px'}} className="mono">
+                  z = <strong style={{color: '#8b5cf6'}}>{z.toFixed(4)}</strong>
+                </div>
+              </div>
+
+              <div className="trace-card">
+                <div style={{fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px'}}>Activation f(z)</div>
+                <div style={{color: z>=0 ? '#10b981':'#ef4444', fontWeight: '600'}} className="mono">
+                  {z >= 0 ? 'z ≥ 0 → ŷ = 1 (FIRE)' : 'z < 0 → ŷ = 0 (SILENT)'}
+                </div>
+              </div>
+
+              <div className="pred-box" style={{borderColor: outColor, background: `${outColor}10`}}>
+                <div style={{fontSize: '10px', letterSpacing: '2px', color: outColor, fontWeight: '600', marginBottom: '4px'}}>FINAL PREDICTION</div>
+                <div className="mono" style={{fontSize: '36px', fontWeight: 'bold', color: outColor}}>ŷ = {pred}</div>
+              </div>
+            </aside>
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

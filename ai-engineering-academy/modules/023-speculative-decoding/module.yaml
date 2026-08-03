@@ -1,0 +1,30 @@
+id: 023-speculative-decoding
+title: "Speculative Decoding & Draft Model Verification"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "011-transformer"
+  - "015-kv-cache-gqa"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements Speculative Decoding (Leviathan et al. 2023 / Chen et al. 2023) from scratch in pure Python & NumPy:
+  Draft model speculative K-token sequence generation, Target model parallel validation pass,
+  rejection sampling with probability ratio min(1, P_target(x) / P_draft(x)), and 2-3x inference speedup.
+
+outcomes:
+  - "Explain why LLM autoregressive decoding is memory-bandwidth bound and how draft models bypass it"
+  - "Implement DraftGenerator for fast K-step autoregressive candidate generation"
+  - "Implement SpeculativeVerifier validating K candidate tokens in a SINGLE Target model forward pass"
+  - "Implement RejectionSampler ensuring exact target distribution recovery without quality loss"
+
+sources:
+  - name: "Leviathan et al. (2023) Fast Inference from Large Language Models via Speculative Decoding"
+    url: "https://arxiv.org/abs/2211.17192"
+    type: "Paper"
+  - name: "Chen et al. (2023) Accelerating Large Language Model Decoding with Speculative Sampling"
+    url: "https://arxiv.org/abs/2302.01318"
+    type: "Paper"

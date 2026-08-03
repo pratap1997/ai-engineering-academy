@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 003 — Reverse-Mode Automatic Differentiation Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #060610; --surface: #0d0d1a; --surface-2: #12122a;
+      --border: rgba(255,255,255,0.08); --blue: #00d4ff; --purple: #8b5cf6;
+      --green: #10b981; --red: #ef4444; --amber: #f59e0b;
+      --text: #e2e8f0; --text-muted: #64748b;
+      --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; height: 100vh; overflow: hidden; }
+    #root { height: 100%; }
+    .mono { font-family: var(--mono); }
+    .text-blue { color: var(--blue); } .text-purple { color: var(--purple); }
+    .text-green { color: var(--green); } .text-red { color: var(--red); } .text-amber { color: var(--amber); }
+    .text-muted { color: var(--text-muted); }
+
+    .app { display: flex; flex-direction: column; height: 100vh; }
+    header { background: #0a0a18; border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .badge { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: var(--green); font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+    
+    .phase-bar { display: flex; gap: 4px; padding: 8px 24px; background: #080814; border-bottom: 1px solid var(--border); }
+    .p-step { flex: 1; text-align: center; font-size: 10px; padding: 5px; border-radius: 6px; background: var(--surface-2); color: var(--text-muted); transition: all 0.3s; }
+    .p-step.active { background: rgba(16,185,129,0.18); color: var(--green); border: 1px solid rgba(16,185,129,0.4); font-weight: 600; }
+
+    main { flex: 1; display: grid; grid-template-columns: 260px 1fr 300px; min-height: 0; }
+    aside { background: var(--surface); padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; border-right: 1px solid var(--border); }
+    aside.right { border-right: none; border-left: 1px solid var(--border); }
+
+    .sec-title { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .ctrl-row { margin-bottom: 8px; }
+    .ctrl-lbl { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; }
+    input[type=range] { width: 100%; accent-color: var(--green); }
+
+    .btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 6px; font-family: var(--mono); font-size: 12px; cursor: pointer; }
+    .btn:hover { border-color: var(--green); color: var(--green); }
+    .btn-run { background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(0,212,255,0.2)); border-color: var(--green); color: var(--green); font-weight: 600; padding: 10px 24px; font-size: 13px; }
+
+    .center-stage { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 16px; background: var(--bg); }
+    .svg-wrap { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; }
+
+    .node-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 6px; }
+    .grad-badge { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); color: var(--red); font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const PHASES = ['Forward: x, w', 'Forward: z = x*w + b', 'Forward: a = ReLU(z)', 'Forward: Loss L', 'Backward Pass (Autodiff)', 'Gradients Complete'];
+    
+    function App() {
+      const [xVal, setX] = useState(2.0);
+      const [wVal, setW] = useState(-1.5);
+      const [bVal, setB] = useState(4.0);
+      const [yTarget, setY] = useState(0.0);
+      const [phase, setPhase] = useState(5);
+      const [playing, setPlaying] = useState(false);
+      const timerRef = useRef(null);
+
+      // Computation Graph:
+      // prod = x * w
+      // z = prod + b
+      // a = relu(z)
+      // diff = a - y
+      // L = 0.5 * diff^2
+
+      const prod_data = xVal * wVal;
+      const z_data    = prod_data + bVal;
+      const a_data    = Math.max(0, z_data);
+      const diff_data = a_data - yTarget;
+      const loss_data = 0.5 * Math.pow(diff_data, 2);
+
+      // Backward pass calculations
+      const loss_grad = 1.0;
+      const diff_grad = diff_data * loss_grad;
+      const a_grad    = diff_grad;
+      const z_grad    = (z_data > 0 ? 1.0 : 0.0) * a_grad;
+      const prod_grad = z_grad;
+      const b_grad    = z_grad;
+      const x_grad    = wVal * prod_grad;
+      const w_grad    = xVal * prod_grad;
+
+      const runAnim = () => {
+        clearInterval(timerRef.current);
+        setPhase(0);
+        setPlaying(true);
+        let p = 0;
+        timerRef.current = setInterval(() => {
+          p++;
+          if (p >= PHASES.length) { clearInterval(timerRef.current); setPlaying(false); }
+          else { setPhase(p); }
+        }, 900);
+      };
+
+      return (
+        <div className="app">
+          <header>
+            <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+              <span className="badge">MODULE 003</span>
+              <h2 style={{fontSize: '18px', color: '#fff'}}>Reverse-Mode Autodiff Computational DAG</h2>
+            </div>
+            <div style={{display: 'flex', gap: '10px', alignItems: 'center', background: 'rgba(16,185,129,0.12)', border: '1px solid #10b981', padding: '4px 12px', borderRadius: '8px', color: '#10b981'}}>
+              <span style={{fontSize: '10px', letterSpacing: '1px'}}>LOSS L</span>
+              <strong className="mono" style={{fontSize: '16px'}}>{loss_data.toFixed(4)}</strong>
+            </div>
+          </header>
+
+          <div className="phase-bar">
+            {PHASES.map((lbl, i) => (
+              <div key={lbl} className={`p-step ${i <= phase ? 'active' : ''}`}>{lbl}</div>
+            ))}
+          </div>
+
+          <main>
+            {/* Left Controls */}
+            <aside>
+              <div>
+                <div className="sec-title">Graph Parameters</div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-blue">Input x</span><span className="mono">{xVal.toFixed(2)}</span></div>
+                  <input type="range" min="-5" max="5" step="0.5" value={xVal} onChange={e => {setX(+e.target.value); runAnim();}}/>
+                </div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-purple">Weight w</span><span className="mono">{wVal.toFixed(2)}</span></div>
+                  <input type="range" min="-5" max="5" step="0.5" value={wVal} onChange={e => {setW(+e.target.value); runAnim();}}/>
+                </div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-amber">Bias b</span><span className="mono">{bVal.toFixed(2)}</span></div>
+                  <input type="range" min="-5" max="5" step="0.5" value={bVal} onChange={e => {setB(+e.target.value); runAnim();}}/>
+                </div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-green">Target y</span><span className="mono">{yTarget.toFixed(2)}</span></div>
+                  <input type="range" min="0" max="5" step="1" value={yTarget} onChange={e => {setY(+e.target.value); runAnim();}}/>
+                </div>
+              </div>
+
+              <div>
+                <div className="sec-title">Calculated Gradients</div>
+                <div className="node-card">
+                  <div style={{display:'flex', justifyBetween:'space-between'}}><span>dL / dw</span><span className="grad-badge">{w_grad.toFixed(4)}</span></div>
+                </div>
+                <div className="node-card">
+                  <div style={{display:'flex', justifyBetween:'space-between'}}><span>dL / db</span><span className="grad-badge">{b_grad.toFixed(4)}</span></div>
+                </div>
+                <div className="node-card">
+                  <div style={{display:'flex', justifyBetween:'space-between'}}><span>dL / dx</span><span className="grad-badge">{x_grad.toFixed(4)}</span></div>
+                </div>
+              </div>
+            </aside>
+
+            {/* Center Stage DAG SVG */}
+            <div className="center-stage">
+              <div className="svg-wrap">
+                <svg viewBox="0 0 840 480" style={{width: '100%', height: '100%', maxWidth: 840}}>
+                  <defs>
+                    <filter id="g-blue"><feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#00d4ff" floodOpacity="0.8"/></filter>
+                    <filter id="g-purple"><feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#8b5cf6" floodOpacity="0.8"/></filter>
+                    <filter id="g-green"><feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#10b981" floodOpacity="0.8"/></filter>
+                    <filter id="g-red"><feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#ef4444" floodOpacity="0.8"/></filter>
+                    <filter id="g-amber"><feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#f59e0b" floodOpacity="0.8"/></filter>
+                    
+                    <path id="flow-back" d="M 720,240 L 100,240"/>
+                  </defs>
+
+                  {/* Forward Wires */}
+                  <g strokeWidth="2" stroke="rgba(255,255,255,0.2)">
+                    <line x1="120" y1="120" x2="260" y2="180"/>
+                    <line x1="120" y1="240" x2="260" y2="180"/>
+                    <line x1="320" y1="180" x2="440" y2="240"/>
+                    <line x1="120" y1="360" x2="440" y2="240"/>
+                    <line x1="500" y1="240" x2="620" y2="240"/>
+                    <line x1="680" y1="240" x2="740" y2="240"/>
+                  </g>
+
+                  {/* Gradient Flow Animation (Red Pulsing Backward Wire) */}
+                  {phase >= 4 && (
+                    <circle r="8" fill="#ef4444" filter="url(#g-red)">
+                      <animateMotion dur="1.2s" repeatCount="indefinite"><mpath href="#flow-back"/></animateMotion>
+                    </circle>
+                  )}
+
+                  {/* Nodes */}
+                  <g textAnchor="middle">
+                    {/* x */}
+                    <circle cx="100" cy="120" r="28" fill="rgba(0,212,255,0.12)" stroke="#00d4ff" strokeWidth="2" filter="url(#g-blue)"/>
+                    <text x="100" y="115" fill="#00d4ff" fontSize="12">x</text>
+                    <text x="100" y="130" fill="#fff" fontSize="10" fontFamily="JetBrains Mono">{xVal.toFixed(1)}</text>
+                    {phase >= 4 && <text x="100" y="162" fill="#ef4444" fontSize="10" fontFamily="JetBrains Mono" fontWeight="bold">g={x_grad.toFixed(2)}</text>}
+
+                    {/* w */}
+                    <circle cx="100" cy="240" r="28" fill="rgba(139,92,246,0.12)" stroke="#8b5cf6" strokeWidth="2" filter="url(#g-purple)"/>
+                    <text x="100" y="235" fill="#8b5cf6" fontSize="12">w</text>
+                    <text x="100" y="250" fill="#fff" fontSize="10" fontFamily="JetBrains Mono">{wVal.toFixed(1)}</text>
+                    {phase >= 4 && <text x="100" y="282" fill="#ef4444" fontSize="10" fontFamily="JetBrains Mono" fontWeight="bold">g={w_grad.toFixed(2)}</text>}
+
+                    {/* b */}
+                    <circle cx="100" cy="360" r="28" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" strokeWidth="2" filter="url(#g-amber)"/>
+                    <text x="100" y="355" fill="#f59e0b" fontSize="12">b</text>
+                    <text x="100" y="370" fill="#fff" fontSize="10" fontFamily="JetBrains Mono">{bVal.toFixed(1)}</text>
+                    {phase >= 4 && <text x="100" y="402" fill="#ef4444" fontSize="10" fontFamily="JetBrains Mono" fontWeight="bold">g={b_grad.toFixed(2)}</text>}
+
+                    {/* Multiply Node */}
+                    {phase >= 1 && (
+                      <>
+                        <circle cx="290" cy="180" r="28" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" strokeWidth="2"/>
+                        <text x="290" y="175" fill="#00d4ff" fontSize="12">*</text>
+                        <text x="290" y="190" fill="#fff" fontSize="10" fontFamily="JetBrains Mono">{prod_data.toFixed(1)}</text>
+                      </>
+                    )}
+
+                    {/* Add (z) Node */}
+                    {phase >= 1 && (
+                      <>
+                        <circle cx="470" cy="240" r="30" fill="rgba(139,92,246,0.15)" stroke="#8b5cf6" strokeWidth="2" filter="url(#g-purple)"/>
+                        <text x="470" y="235" fill="#8b5cf6" fontSize="12">z (+)</text>
+                        <text x="470" y="250" fill="#fff" fontSize="10" fontFamily="JetBrains Mono">{z_data.toFixed(1)}</text>
+                        {phase >= 4 && <text x="470" y="285" fill="#ef4444" fontSize="10" fontFamily="JetBrains Mono" fontWeight="bold">g={z_grad.toFixed(2)}</text>}
+                      </>
+                    )}
+
+                    {/* ReLU Node */}
+                    {phase >= 2 && (
+                      <>
+                        <rect x="620" y="210" width="60" height="60" rx="8" fill="rgba(16,185,129,0.15)" stroke="#10b981" strokeWidth="2" filter="url(#g-green)"/>
+                        <text x="650" y="235" fill="#10b981" fontSize="11">ReLU</text>
+                        <text x="650" y="252" fill="#fff" fontSize="10" fontFamily="JetBrains Mono">{a_data.toFixed(1)}</text>
+                      </>
+                    )}
+
+                    {/* Loss Node */}
+                    {phase >= 3 && (
+                      <>
+                        <circle cx="770" cy="240" r="32" fill="rgba(239,68,68,0.15)" stroke="#ef4444" strokeWidth="2.5" filter="url(#g-red)"/>
+                        <text x="770" y="234" fill="#ef4444" fontSize="12" fontWeight="bold">Loss L</text>
+                        <text x="770" y="252" fill="#fff" fontSize="10" fontFamily="JetBrains Mono">{loss_data.toFixed(3)}</text>
+                        <text x="770" y="287" fill="#ef4444" fontSize="10" fontFamily="JetBrains Mono" fontWeight="bold">grad=1.0</text>
+                      </>
+                    )}
+                  </g>
+                </svg>
+              </div>
+
+              <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+                <button className="btn btn-run" onClick={runAnim}>{playing ? 'Stop' : '▶ Run Autodiff Pass'}</button>
+                <span style={{color: 'var(--text-muted)', fontSize: '12px'}}>Stage: <strong className="mono text-green">{PHASES[phase]}</strong></span>
+              </div>
+            </div>
+
+            {/* Right Trace */}
+            <aside className="right">
+              <div className="sec-title">Chain Rule Calculations</div>
+              
+              <div className="node-card">
+                <div style={{fontSize: '11px', color: '#ef4444', fontWeight: '600', marginBottom: '2px'}}>1. Loss Seed</div>
+                <div className="mono" style={{fontSize: '11px'}}>dL / dL = 1.0</div>
+              </div>
+
+              <div className="node-card">
+                <div style={{fontSize: '11px', color: '#10b981', fontWeight: '600', marginBottom: '2px'}}>2. ReLU Derivative</div>
+                <div className="mono" style={{fontSize: '11px'}}>
+                  da/dz = {z_data > 0 ? '1.0 (z > 0)' : '0.0 (z <= 0)'}
+                </div>
+                <div className="mono" style={{fontSize: '11px', marginTop: '2px'}}>
+                  dL/dz = dL/da * da/dz = <strong className="text-purple">{z_grad.toFixed(4)}</strong>
+                </div>
+              </div>
+
+              <div className="node-card">
+                <div style={{fontSize: '11px', color: '#8b5cf6', fontWeight: '600', marginBottom: '2px'}}>3. Weight Gradient (dL/dw)</div>
+                <div className="mono" style={{fontSize: '11px'}}>
+                  dz/dw = x = {xVal.toFixed(1)}
+                </div>
+                <div className="mono" style={{fontSize: '11px', marginTop: '2px'}}>
+                  dL/dw = dL/dz * x = <strong className="text-red">{w_grad.toFixed(4)}</strong>
+                </div>
+              </div>
+
+              <div className="node-card">
+                <div style={{fontSize: '11px', color: '#f59e0b', fontWeight: '600', marginBottom: '2px'}}>4. Bias Gradient (dL/db)</div>
+                <div className="mono" style={{fontSize: '11px'}}>
+                  dz/db = 1.0
+                </div>
+                <div className="mono" style={{fontSize: '11px', marginTop: '2px'}}>
+                  dL/db = dL/dz * 1.0 = <strong className="text-red">{b_grad.toFixed(4)}</strong>
+                </div>
+              </div>
+            </aside>
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

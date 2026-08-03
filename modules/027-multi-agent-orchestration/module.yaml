@@ -1,0 +1,12 @@
+id: "027"
+title: "Multi-Agent Orchestration"
+subtitle: "Hierarchical, Collaborative, and Competitive Agent Systems"
+difficulty: "advanced"
+prerequisites: ["026"]
+estimated_minutes: 210
+topics:
+  - "Multi-agent systems"
+  - "Message passing protocols"
+  - "Supervisor-worker patterns"
+  - "Debate-style reasoning"
+  - "Consensus mechanisms"

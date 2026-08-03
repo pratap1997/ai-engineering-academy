@@ -1,0 +1,7 @@
+id: 036
+title: Graph RAG & Knowledge Graphs
+difficulty: advanced
+prerequisites:
+  - 024-vector-databases-indexing
+  - 025-advanced-rag-reranking
+estimated_minutes: 180

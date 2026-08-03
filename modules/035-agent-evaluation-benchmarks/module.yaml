@@ -1,0 +1,7 @@
+id: "035"
+title: "Agent Evaluation & Benchmarking"
+difficulty: "Advanced"
+estimated_minutes: 180
+prerequisites:
+  - "026-agentic-loop-primitives"
+  - "027-multi-agent-orchestration"

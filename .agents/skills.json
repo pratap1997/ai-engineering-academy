@@ -1,0 +1,31 @@
+{
+  "entries": [
+    { "path": "C:\\Users\\Mahendra Pratap\\.gemini\\config\\skills" }
+  ],
+  "include": [
+    "sparc-methodology",
+    "verification-quality",
+    "pair-programming",
+    "ui-ux-pro-max",
+    "swarm-orchestration",
+    "workflow-automation",
+    "security-audit",
+    "markitdown",
+    "motion-design",
+    "agentdb-vector-search",
+    "agentdb-memory-patterns",
+    "agentdb-optimization",
+    "embeddings",
+    "graphify",
+    "defuddle",
+    "github-automation",
+    "github-workflow-automation",
+    "neural-training",
+    "agent-researcher",
+    "agent-data-ml-model",
+    "agent-neural-network",
+    "agent-coder",
+    "agent-tester",
+    "agent-reviewer"
+  ]
+}

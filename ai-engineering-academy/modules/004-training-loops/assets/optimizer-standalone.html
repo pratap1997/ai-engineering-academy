@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 004 — Loss Landscape Optimizer Traversal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #060610; --surface: #0d0d1a; --surface-2: #12122a;
+      --border: rgba(255,255,255,0.08); --blue: #00d4ff; --purple: #8b5cf6;
+      --green: #10b981; --red: #ef4444; --amber: #f59e0b;
+      --text: #e2e8f0; --text-muted: #64748b;
+      --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; height: 100vh; overflow: hidden; }
+    #root { height: 100%; }
+    .mono { font-family: var(--mono); }
+    .text-blue { color: var(--blue); } .text-purple { color: var(--purple); }
+    .text-green { color: var(--green); } .text-red { color: var(--red); } .text-amber { color: var(--amber); }
+    .text-muted { color: var(--text-muted); }
+
+    .app { display: flex; flex-direction: column; height: 100vh; }
+    header { background: #0a0a18; border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .badge { background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.4); color: var(--blue); font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+    
+    main { flex: 1; display: grid; grid-template-columns: 280px 1fr 300px; min-height: 0; }
+    aside { background: var(--surface); padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; border-right: 1px solid var(--border); }
+    aside.right { border-right: none; border-left: 1px solid var(--border); }
+
+    .sec-title { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .ctrl-row { margin-bottom: 8px; }
+    .ctrl-lbl { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; }
+    input[type=range] { width: 100%; accent-color: var(--blue); }
+
+    .btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 6px; font-family: var(--mono); font-size: 12px; cursor: pointer; }
+    .btn:hover { border-color: var(--blue); color: var(--blue); }
+    .btn-run { background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(139,92,246,0.2)); border-color: var(--blue); color: var(--blue); font-weight: 600; padding: 10px 24px; font-size: 13px; }
+
+    .center-stage { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 16px; background: var(--bg); }
+    .svg-wrap { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; }
+
+    .opt-legend { display: flex; flex-direction: column; gap: 6px; }
+    .leg-item { display: flex; align-items: center; justify-content: space-between; background: var(--surface-2); padding: 8px 12px; border-radius: 6px; font-family: var(--mono); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // Loss Landscape: L(x,y) = 0.1*x^2 + 2.0*y^2 (Ill-conditioned Ravine)
+    function loss(x, y) { return 0.1 * x * x + 2.0 * y * y; }
+    function grad(x, y) { return [0.2 * x, 4.0 * y]; }
+
+    function App() {
+      const [lr, setLr] = useState(0.1);
+      const [stepCount, setStepCount] = useState(0);
+      const [playing, setPlaying] = useState(false);
+      
+      // Trajectories for 4 optimizers
+      const [history, setHistory] = useState({
+        sgd: [{x: -4.0, y: 3.5}],
+        mom: [{x: -4.0, y: 3.5}],
+        rmsprop: [{x: -4.0, y: 3.5}],
+        adam: [{x: -4.0, y: 3.5}]
+      });
+
+      const stateRef = useRef({
+        sgd: {x: -4.0, y: 3.5},
+        mom: {x: -4.0, y: 3.5, vx: 0, vy: 0},
+        rmsprop: {x: -4.0, y: 3.5, vx: 0, vy: 0},
+        adam: {x: -4.0, y: 3.5, mx: 0, my: 0, vx: 0, vy: 0, t: 0}
+      });
+
+      const timerRef = useRef(null);
+
+      const resetSim = () => {
+        clearInterval(timerRef.current);
+        setPlaying(false);
+        setStepCount(0);
+        stateRef.current = {
+          sgd: {x: -4.0, y: 3.5},
+          mom: {x: -4.0, y: 3.5, vx: 0, vy: 0},
+          rmsprop: {x: -4.0, y: 3.5, vx: 0, vy: 0},
+          adam: {x: -4.0, y: 3.5, mx: 0, my: 0, vx: 0, vy: 0, t: 0}
+        };
+        setHistory({
+          sgd: [{x: -4.0, y: 3.5}],
+          mom: [{x: -4.0, y: 3.5}],
+          rmsprop: [{x: -4.0, y: 3.5}],
+          adam: [{x: -4.0, y: 3.5}]
+        });
+      };
+
+      const stepSim = () => {
+        const st = stateRef.current;
+
+        // SGD
+        const [gx_sgd, gy_sgd] = grad(st.sgd.x, st.sgd.y);
+        st.sgd.x -= lr * gx_sgd;
+        st.sgd.y -= lr * gy_sgd;
+
+        // Momentum (m = 0.9)
+        const [gx_m, gy_m] = grad(st.mom.x, st.mom.y);
+        st.mom.vx = 0.9 * st.mom.vx + gx_m;
+        st.mom.vy = 0.9 * st.mom.vy + gy_m;
+        st.mom.x -= lr * st.mom.vx;
+        st.mom.y -= lr * st.mom.vy;
+
+        // RMSprop (a = 0.9)
+        const [gx_r, gy_r] = grad(st.rmsprop.x, st.rmsprop.y);
+        st.rmsprop.vx = 0.9 * st.rmsprop.vx + 0.1 * (gx_r * gx_r);
+        st.rmsprop.vy = 0.9 * st.rmsprop.vy + 0.1 * (gy_r * gy_r);
+        st.rmsprop.x -= (lr / (Math.sqrt(st.rmsprop.vx) + 1e-8)) * gx_r;
+        st.rmsprop.y -= (lr / (Math.sqrt(st.rmsprop.vy) + 1e-8)) * gy_r;
+
+        // Adam
+        st.adam.t += 1;
+        const [gx_a, gy_a] = grad(st.adam.x, st.adam.y);
+        st.adam.mx = 0.9 * st.adam.mx + 0.1 * gx_a;
+        st.adam.my = 0.9 * st.adam.my + 0.1 * gy_a;
+        st.adam.vx = 0.999 * st.adam.vx + 0.001 * (gx_a * gx_a);
+        st.adam.vy = 0.999 * st.adam.vy + 0.001 * (gy_a * gy_a);
+
+        const mx_hat = st.adam.mx / (1 - Math.pow(0.9, st.adam.t));
+        const my_hat = st.adam.my / (1 - Math.pow(0.9, st.adam.t));
+        const vx_hat = st.adam.vx / (1 - Math.pow(0.999, st.adam.t));
+        const vy_hat = st.adam.vy / (1 - Math.pow(0.999, st.adam.t));
+
+        st.adam.x -= (lr / (Math.sqrt(vx_hat) + 1e-8)) * mx_hat;
+        st.adam.y -= (lr / (Math.sqrt(vy_hat) + 1e-8)) * my_hat;
+
+        setStepCount(c => c + 1);
+        setHistory(prev => ({
+          sgd: [...prev.sgd, {x: st.sgd.x, y: st.sgd.y}],
+          mom: [...prev.mom, {x: st.mom.x, y: st.mom.y}],
+          rmsprop: [...prev.rmsprop, {x: st.rmsprop.x, y: st.rmsprop.y}],
+          adam: [...prev.adam, {x: st.adam.x, y: st.adam.y}],
+        }));
+      };
+
+      const togglePlay = () => {
+        if (playing) {
+          clearInterval(timerRef.current);
+          setPlaying(false);
+        } else {
+          setPlaying(true);
+          timerRef.current = setInterval(stepSim, 80);
+        }
+      };
+
+      // Map (x,y) in [-5,5] to SVG coordinates [0, 800] x [0, 450]
+      const toSvg = (x, y) => ({
+        cx: 400 + (x / 5.0) * 350,
+        cy: 225 - (y / 5.0) * 200
+      });
+
+      return (
+        <div className="app">
+          <header>
+            <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+              <span className="badge">MODULE 004</span>
+              <h2 style={{fontSize: '18px', color: '#fff'}}>Loss Landscape Optimizer Traversal</h2>
+            </div>
+            <div style={{display: 'flex', gap: '12px'}}>
+              <button className="btn btn-run" onClick={togglePlay}>{playing ? 'Pause' : '▶ Run Simulation'}</button>
+              <button className="btn" onClick={resetSim}>Reset</button>
+            </div>
+          </header>
+
+          <main>
+            {/* Left Controls */}
+            <aside>
+              <div>
+                <div className="sec-title">Simulation Controls</div>
+                <div className="ctrl-row">
+                  <div className="ctrl-lbl"><span className="text-blue">Learning Rate η</span><span className="mono">{lr.toFixed(3)}</span></div>
+                  <input type="range" min="0.01" max="0.3" step="0.01" value={lr} onChange={e => {setLr(+e.target.value); resetSim();}}/>
+                </div>
+              </div>
+
+              <div>
+                <div className="sec-title">Optimizer Legend</div>
+                <div className="opt-legend">
+                  <div className="leg-item" style={{borderLeft: '4px solid #ef4444'}}>
+                    <span>SGD</span>
+                    <span className="text-muted">Step: {stepCount}</span>
+                  </div>
+                  <div className="leg-item" style={{borderLeft: '4px solid #f59e0b'}}>
+                    <span>Momentum</span>
+                    <span className="text-amber">β=0.9</span>
+                  </div>
+                  <div className="leg-item" style={{borderLeft: '4px solid #8b5cf6'}}>
+                    <span>RMSprop</span>
+                    <span className="text-purple">α=0.99</span>
+                  </div>
+                  <div className="leg-item" style={{borderLeft: '4px solid #10b981'}}>
+                    <span>Adam</span>
+                    <span className="text-green">β=(.9,.999)</span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            {/* Center Stage Contour Plot */}
+            <div className="center-stage">
+              <div className="svg-wrap">
+                <svg viewBox="0 0 800 450" style={{width: '100%', height: '100%', maxWidth: 800}}>
+                  <defs>
+                    <filter id="g-red"><feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#ef4444" floodOpacity="0.8"/></filter>
+                    <filter id="g-green"><feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#10b981" floodOpacity="0.8"/></filter>
+                  </defs>
+
+                  {/* Contour Ellipses for Ill-Conditioned Ravine: 0.1*x^2 + 2.0*y^2 = c */}
+                  {[0.5, 1.5, 3.0, 5.0, 8.0, 12.0].map((c, i) => {
+                    const rx = Math.sqrt(c / 0.1) * 70;
+                    const ry = Math.sqrt(c / 2.0) * 40;
+                    return (
+                      <ellipse key={i} cx="400" cy="225" rx={rx} ry={ry} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5"/>
+                    );
+                  })}
+
+                  {/* Axis */}
+                  <line x1="50" y1="225" x2="750" y2="225" stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="4"/>
+                  <line x1="400" y1="25" x2="400" y2="425" stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="4"/>
+
+                  {/* Minimum Target Point (0,0) */}
+                  <circle cx="400" cy="225" r="6" fill="#10b981" filter="url(#g-green)"/>
+                  <text x="400" y="245" fill="#10b981" fontSize="10" fontFamily="JetBrains Mono" textAnchor="middle">Global Minimum (0,0)</text>
+
+                  {/* Trajectory Polyline Paths */}
+                  {['sgd', 'mom', 'rmsprop', 'adam'].map(optKey => {
+                    const colors = {sgd: '#ef4444', mom: '#f59e0b', rmsprop: '#8b5cf6', adam: '#10b981'};
+                    const pts = history[optKey].map(p => {
+                      const s = toSvg(p.x, p.y);
+                      return `${s.cx},${s.cy}`;
+                    }).join(' ');
+                    const lastPt = toSvg(history[optKey][history[optKey].length - 1].x, history[optKey][history[optKey].length - 1].y);
+                    return (
+                      <g key={optKey}>
+                        <polyline points={pts} fill="none" stroke={colors[optKey]} strokeWidth="2.5" opacity="0.8"/>
+                        <circle cx={lastPt.cx} cy={lastPt.cy} r="6" fill={colors[optKey]}/>
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+
+              <div style={{color: 'var(--text-muted)', fontSize: '12px'}}>
+                Iteration: <strong className="mono text-blue">{stepCount}</strong>
+              </div>
+            </div>
+
+            {/* Right Status */}
+            <aside className="right">
+              <div className="sec-title">Current Loss Values</div>
+              
+              {['sgd', 'mom', 'rmsprop', 'adam'].map(k => {
+                const colors = {sgd: '#ef4444', mom: '#f59e0b', rmsprop: '#8b5cf6', adam: '#10b981'};
+                const pt = history[k][history[k].length - 1];
+                const l = loss(pt.x, pt.y);
+                return (
+                  <div key={k} style={{background: 'var(--surface-2)', padding: '10px', borderRadius: '8px', borderLeft: `4px solid ${colors[k]}`}}>
+                    <div style={{fontSize: '11px', textTransform: 'uppercase', color: colors[k], fontWeight: 'bold'}}>{k}</div>
+                    <div className="mono" style={{fontSize: '14px', marginTop: '2px'}}>L = {l.toFixed(6)}</div>
+                    <div style={{fontSize: '10px', color: 'var(--text-muted)'}}>Pos: ({pt.x.toFixed(2)}, {pt.y.toFixed(2)})</div>
+                  </div>
+                );
+              })}
+            </aside>
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

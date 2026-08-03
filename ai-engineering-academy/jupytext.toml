@@ -1,0 +1,15 @@
+# Jupytext configuration
+# Notebooks are paired with .py files using the percent format.
+# This makes experiments diffable in Git without reviewing raw JSON.
+#
+# To pair an existing notebook:
+#   jupytext --set-formats ipynb,py:percent 05-experiments.ipynb
+#
+# To sync after editing the .py file:
+#   jupytext --sync 05-experiments.py
+#
+# Both files should be committed to Git.
+
+[formats]
+notebook_metadata_filter = "-all"
+cell_metadata_filter = "-all"

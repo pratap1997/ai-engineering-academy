@@ -1,0 +1,30 @@
+id: 016-quantization
+title: "Model Quantization (INT8, INT4 Weight-Only & Symmetric/Asymmetric Scaling)"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "002-multilayer"
+  - "011-transformer"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements INT8 and INT4 quantization schemes from scratch in pure Python & NumPy:
+  Symmetric vs Asymmetric quantization, scale and zero-point computation, block-wise quantization,
+  and quantized matrix multiplication (Dequantization / INT8 GEMM emulation).
+
+outcomes:
+  - "Implement symmetric and asymmetric INT8/INT4 quantizers from scratch"
+  - "Derive scale factor s = (max - min) / (qmax - qmin) and zero point z"
+  - "Implement block-wise (group-wise) quantization for INT4 weights"
+  - "Measure memory compression ratio (4x for INT8, 8x for INT4) and quantization error"
+
+sources:
+  - name: "Dettmers et al. (2022) LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale"
+    url: "https://arxiv.org/abs/2208.07339"
+    type: "Paper"
+  - name: "Frantar et al. (2022) GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers"
+    url: "https://arxiv.org/abs/2210.17323"
+    type: "Paper"

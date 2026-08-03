@@ -1,0 +1,29 @@
+id: 002-multilayer
+title: "Multilayer Perceptron & Hidden Layers"
+version: "1.0.0"
+difficulty: "Intermediate"
+prerequisites:
+  - "001-perceptron"
+estimated_minutes: 60
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-01"
+
+summary: >
+  Demonstrates how stacking linear transformations separated by non-linear
+  activation functions (Hidden Layers) enables neural networks to solve
+  non-linearly separable problems like XOR and warp feature spaces.
+
+outcomes:
+  - "Explain how hidden layers transform non-linearly separable inputs into linearly separable representations"
+  - "Implement forward pass matrix operations for multi-layer neural networks"
+  - "Compare Sigmoid, ReLU, Tanh, and Step activation functions mathematically and computationally"
+  - "Manually configure a 2-2-1 network to solve XOR with 100% accuracy"
+
+sources:
+  - name: "Minsky & Papert (1969) Perceptrons"
+    url: "https://mitpress.mit.edu/9780262631112/perceptrons/"
+    type: "Book"
+  - name: "Cybenko (1989) Approximation by Superpositions of a Sigmoidal Function"
+    url: "https://link.springer.com/article/10.1007/BF02551274"
+    type: "Paper"

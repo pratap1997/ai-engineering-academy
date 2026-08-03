@@ -1,0 +1,8 @@
+id: "049-ai-gateway-routing-caching-compression"
+title: "AI Gateway Engineering"
+difficulty: "Intermediate"
+prerequisites:
+  - "024-vector-databases-indexing"
+  - "031-tool-use-function-calling-runtime"
+estimated_minutes: 120
+description: "Master production AI Gateway architectures including multi-provider routing, fallback mechanisms, two-tier caching (exact + semantic), and aggressive prompt token compression techniques."

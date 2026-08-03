@@ -1,0 +1,30 @@
+id: 018-flash-attention
+title: "FlashAttention & Memory-Efficient Tiled Attention Algorithm"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "010-attention"
+  - "011-transformer"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements the FlashAttention tiled online-softmax algorithm from scratch in pure Python & NumPy:
+  Block-wise Query/Key/Value matrix multiplication, Online Softmax numerical stabilization,
+  O(T) HBM memory reduction, and backward pass recomputation without storing NxN attention matrices.
+
+outcomes:
+  - "Implement Online Softmax (Milakov & Gimelshein / Dao et al.) for streaming softmax accumulation"
+  - "Implement FlashAttention tiled forward pass in SRAM block chunks"
+  - "Explain IO-awareness and how SRAM vs HBM memory hierarchy determines LLM attention throughput"
+  - "Verify exact numerical equivalence between standard Softmax Attention and Tiled FlashAttention"
+
+sources:
+  - name: "Dao et al. (2022) FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness"
+    url: "https://arxiv.org/abs/2205.14135"
+    type: "Paper"
+  - name: "Dao (2023) FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning"
+    url: "https://arxiv.org/abs/2307.08691"
+    type: "Paper"

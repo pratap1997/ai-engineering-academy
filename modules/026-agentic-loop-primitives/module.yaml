@@ -1,0 +1,25 @@
+id: "026"
+title: "Agentic Loop Primitives"
+subtitle: "ReAct, Tool Use, and Planning Strategies"
+difficulty: "advanced"
+prerequisites: ["010", "011", "012", "013", "014"]
+estimated_minutes: 180
+topics:
+  - "ReAct framework"
+  - "Tool use and function calling"
+  - "Chain-of-thought reasoning"
+  - "Task decomposition and planning"
+  - "POMDP formulation of agents"
+sources:
+  - title: "ReAct: Synergizing Reasoning and Acting in Language Models"
+    authors: "Yao et al."
+    year: 2022
+    url: "https://arxiv.org/abs/2210.03629"
+  - title: "Toolformer: Language Models Can Teach Themselves to Use Tools"
+    authors: "Schick et al."
+    year: 2023
+    url: "https://arxiv.org/abs/2302.04761"
+  - title: "Tree of Thoughts: Deliberate Problem Solving with Large Language Models"
+    authors: "Yao et al."
+    year: 2023
+    url: "https://arxiv.org/abs/2305.10601"

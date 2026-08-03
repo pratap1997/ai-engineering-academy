@@ -1,0 +1,6 @@
+id: 048-distributed-agent-swarms-p2p
+title: Distributed Agent Swarms & P2P Protocols
+difficulty: Advanced
+prerequisites:
+  - 027-multi-agent-orchestration
+estimated_minutes: 120

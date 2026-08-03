@@ -1,0 +1,30 @@
+id: 022-model-distillation
+title: "Knowledge Distillation & Student Model Extraction"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "002-multilayer"
+  - "012-bert-gpt-pretraining"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements Knowledge Distillation (Hinton et al. 2015 / DistilBERT / DistilQwen) from scratch in pure Python & NumPy:
+  Soft target temperature scaling (logits / T), KL-divergence loss L_KL, hard cross-entropy ground-truth loss L_CE,
+  combined distillation loss L_Distill = alpha * T^2 * L_KL + (1 - alpha) * L_CE, and student parameter compression.
+
+outcomes:
+  - "Derive Hinton Knowledge Distillation loss formulation with temperature scaling T"
+  - "Implement SoftmaxWithTemperature and KLDivergenceLoss with exact numerical stability"
+  - "Implement KnowledgeDistiller training step transferring logits from Teacher model to Student model"
+  - "Measure model compression ratio (e.g. 6-layer Student matching 12-layer Teacher performance)"
+
+sources:
+  - name: "Hinton et al. (2015) Distilling the Knowledge in a Neural Network"
+    url: "https://arxiv.org/abs/1503.02531"
+    type: "Paper"
+  - name: "Sanh et al. (2019) DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter"
+    url: "https://arxiv.org/abs/1910.01108"
+    type: "Paper"

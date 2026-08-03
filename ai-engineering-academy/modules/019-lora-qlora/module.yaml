@@ -1,0 +1,31 @@
+id: 019-lora-qlora
+title: "Parameter-Efficient Fine-Tuning (LoRA, QLoRA & Weight Merging)"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "002-multilayer"
+  - "011-transformer"
+  - "016-quantization"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements Low-Rank Adaptation (LoRA) and Quantized LoRA (QLoRA) from scratch in pure Python & NumPy:
+  Low-rank matrix decomposition ΔW = (alpha / r) * (A @ B), weight freezing, zero-latency inference weight merging,
+  and 4-bit quantized base weight integration.
+
+outcomes:
+  - "Implement LoRALinear layer with low-rank matrices A and B and scaling factor alpha / r"
+  - "Implement zero-latency weight merging (W_merged = W_base + (alpha / r) * A @ B)"
+  - "Implement QLoRA combining 4-bit group-wise quantized base weights with FP32/FP16 LoRA adapters"
+  - "Calculate parameter reduction (>99.9% parameter savings) for LLM fine-tuning"
+
+sources:
+  - name: "Hu et al. (2021) LoRA: Low-Rank Adaptation of Large Language Models"
+    url: "https://arxiv.org/abs/2106.09685"
+    type: "Paper"
+  - name: "Dettmers et al. (2023) QLoRA: Efficient Finetuning of Quantized LLMs"
+    url: "https://arxiv.org/abs/2305.14314"
+    type: "Paper"

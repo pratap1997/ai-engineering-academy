@@ -1,0 +1,11 @@
+id: "038"
+title: "Long-Context Scaling & Position Encodings"
+difficulty: "Advanced"
+prerequisites: ["011-transformer", "014-positional-encodings", "018-flash-attention"]
+estimated_minutes: 180
+description: "Techniques for scaling context lengths in LLMs including Linear Scaling, YaRN, Sliding Window Attention, and Chunked Prefill."
+sources:
+  - "Su et al. 2021: RoFormer: Enhanced Transformer with Rotary Position Embedding"
+  - "Chen et al. 2023: Extending Context Window of Large Language Models via Positional Interpolation"
+  - "Peng et al. 2023: YaRN: Yet Another RoPE Extrapolation Method"
+  - "vLLM documentation on Chunked Prefill"

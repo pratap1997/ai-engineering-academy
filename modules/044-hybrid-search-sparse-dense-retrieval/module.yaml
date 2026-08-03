@@ -1,0 +1,9 @@
+id: 044-hybrid-search-sparse-dense-retrieval
+title: "Hybrid Search & Fusion Retrieval"
+difficulty: advanced
+prerequisites:
+  - 024-vector-databases-indexing
+estimated_minutes: 120
+description: |
+  Learn how to combine exact keyword matching (BM25) with semantic meaning (Dense Vector Retrieval)
+  using Reciprocal Rank Fusion and alpha-blending for high-precision retrieval pipelines.

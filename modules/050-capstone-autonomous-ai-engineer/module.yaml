@@ -1,0 +1,6 @@
+id: 050
+title: "Capstone - Autonomous AI Engineer"
+difficulty: "Expert"
+prerequisites: ["001-049"]
+estimated_minutes: 240
+description: "The Grand Synthesis: building a complete autonomous AI engineering agent system combining all preceding modules."

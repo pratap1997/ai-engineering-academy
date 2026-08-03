@@ -1,0 +1,10 @@
+id: 045
+title: System Prompt Engineering & Jailbreak Defense
+difficulty: Advanced
+prerequisites:
+  - 026-agentic-loop-primitives
+  - 031-tool-use-function-calling-runtime
+estimated_minutes: 120
+sources:
+  - OWASP LLM Top 10
+  - Greshake et al. 2023

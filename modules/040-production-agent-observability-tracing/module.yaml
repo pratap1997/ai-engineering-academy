@@ -1,0 +1,7 @@
+id: 040-production-agent-observability-tracing
+title: Production Agent Observability & Tracing
+difficulty: Intermediate
+prerequisites:
+  - 026-agentic-loop-primitives
+  - 027-multi-agent-orchestration
+estimated_minutes: 120

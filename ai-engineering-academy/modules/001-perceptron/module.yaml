@@ -1,0 +1,159 @@
+schema_version: 1
+
+id: 001-perceptron
+title: Perceptron From Scratch
+status: draft
+difficulty: beginner
+estimated_hours: 4
+
+# ─────────────────────────────────────────────
+# CAPABILITY CONTRACT
+# A module is complete only when the learner
+# satisfies all evidence items below.
+# ─────────────────────────────────────────────
+capability:
+  statement: >
+    Implement, test, explain, experiment with, and debug a binary perceptron
+    using only Python and optionally NumPy, without copying the reference
+    implementation.
+  evidence:
+    - reference implementation passes all automated tests
+    - learner's own implementation classifies AND and OR correctly
+    - learner demonstrates and explains why XOR fails (geometric reasoning)
+    - learner completes the constrained engineering challenge within 45 minutes
+    - learner explains the role of weights, bias, learning rate, and epochs in writing
+
+# ─────────────────────────────────────────────
+# PREREQUISITES
+# ─────────────────────────────────────────────
+prerequisites:
+  concepts:
+    - variables
+    - functions
+    - vectors
+    - dot_product
+  coding:
+    - basic_python
+    - loops
+    - classes
+
+# ─────────────────────────────────────────────
+# LEARNING OUTCOMES
+# ─────────────────────────────────────────────
+learning_outcomes:
+  - explain the perceptron as a weighted decision system
+  - derive the prediction rule from first principles
+  - derive the update rule from first principles
+  - implement a perceptron using built-in Python only
+  - implement an equivalent NumPy version
+  - visualize a linear decision boundary
+  - diagnose non-linearly-separable data and explain the geometric reason
+  - identify at least two situations where a perceptron should not be used
+
+# ─────────────────────────────────────────────
+# ARTIFACTS
+# ─────────────────────────────────────────────
+artifacts:
+  overview:             01-overview.md
+  mental_model:         02-mental-model.md
+  mathematics:          03-mathematics.md
+  implementation:       04-implementation.py
+  experiments:          05-experiments.ipynb
+  real_applications:    06-real-applications.md
+  engineering_challenge: 07-engineering-challenge.md
+  assessment:           08-assessment.md
+  references:           09-references.md
+
+# ─────────────────────────────────────────────
+# EXPERIMENTS
+# ─────────────────────────────────────────────
+experiments:
+  - and_gate
+  - or_gate
+  - xor_failure
+  - remove_bias
+  - learning_rate_comparison
+  - training_order_shuffle
+  - noisy_data
+  - implementation_scaling    # 10 / 1,000 / 10,000 samples
+
+# ─────────────────────────────────────────────
+# LABEL CONVENTION
+# This module uses 0 / 1 labels (not +1 / -1).
+# Reason: more natural for binary classification
+# tasks and consistent with Module 002 onward
+# (binary cross-entropy, logistic regression).
+# The update rule is: w += η(y - ŷ)x
+# ─────────────────────────────────────────────
+label_convention: binary_0_1
+
+# ─────────────────────────────────────────────
+# PROGRESSION
+# ─────────────────────────────────────────────
+progression:
+  learn:
+    status: in_progress       # pending | in_progress | complete
+    completed_at: null
+    evidence: null
+    misconceptions_corrected: []
+  build:
+    status: pending
+    completed_at: null
+    evidence: null
+    misconceptions_corrected: []
+  teach:
+    status: pending
+    completed_at: null
+    evidence: null
+    misconceptions_corrected: []
+  optimize:
+    status: pending
+    completed_at: null
+    evidence: null
+    misconceptions_corrected: []
+
+# ─────────────────────────────────────────────
+# QUALITY GATES
+# ─────────────────────────────────────────────
+quality:
+  # Technical
+  tests_passing: false
+  notebook_runs_clean: false
+  charts_reproducible: false
+  equations_match_implementation: false
+  # Educational
+  external_review_count: 0
+  challenge_pilot_completed: false
+  unresolved_errata: 0
+  confusion_points_documented: 0
+  # Publishing
+  module_readme_complete: false
+  sources_recorded: true
+  errata_mechanism_active: true
+  walkthrough_published: false
+  # Business
+  learner_attempts: 0
+  next_module_requests: 0
+
+# ─────────────────────────────────────────────
+# SOURCES (pinned when consulted)
+# ─────────────────────────────────────────────
+sources:
+  primary:
+    - repository: microsoft/AI-For-Beginners
+      path: lessons/3-NeuralNetworks/03-Perceptron/README.md
+      commit: "<pin-when-consulted>"
+      accessed: "2026-08-01"
+      licence: MIT
+      use: concept_seed
+  supplementary: []
+
+# ─────────────────────────────────────────────
+# CURRICULUM GRAPH
+# ─────────────────────────────────────────────
+next_modules:
+  - 002-loss-functions
+  - 003-gradient-descent
+  - 004-multilayer-perceptron
+
+capstone_contributor: false   # becomes true at Module 005 mini-capstone

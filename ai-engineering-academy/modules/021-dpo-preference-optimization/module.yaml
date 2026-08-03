@@ -1,0 +1,30 @@
+id: 021-dpo-preference-optimization
+title: "Direct Preference Optimization (DPO) & Alignment"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "003-backprop"
+  - "012-bert-gpt-pretraining"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements Direct Preference Optimization (DPO) from scratch in pure Python & NumPy:
+  Bradley-Terry preference model, implicit reward formulation r(x, y) = beta * log(pi_theta(y|x) / pi_ref(y|x)),
+  loss computation L_DPO, reference model KL penalty, and preference optimization training step.
+
+outcomes:
+  - "Derive the DPO loss from the RLHF Bradley-Terry reward objective"
+  - "Implement DPOLoss calculating log-ratio margins between chosen and rejected completions"
+  - "Implement PreferenceDataCollator for paired (prompt, chosen, rejected) datasets"
+  - "Explain why DPO eliminates explicit Reward Model training and PPO actor-critic instability"
+
+sources:
+  - name: "Rafailov et al. (2023) Direct Preference Optimization: Your Language Model is Secretly a Reward Model"
+    url: "https://arxiv.org/abs/2305.18290"
+    type: "Paper"
+  - name: "Ouyang et al. (2022) Training language models to follow instructions with human feedback (InstructGPT)"
+    url: "https://arxiv.org/abs/2203.02155"
+    type: "Paper"

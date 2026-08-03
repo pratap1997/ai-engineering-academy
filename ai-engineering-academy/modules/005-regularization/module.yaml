@@ -1,0 +1,34 @@
+id: 005-regularization
+title: "Regularization, Normalization & Overfitting"
+version: "1.0.0"
+difficulty: "Intermediate"
+prerequisites:
+  - "001-perceptron"
+  - "002-multilayer"
+  - "003-backprop"
+  - "004-training-loops"
+estimated_minutes: 85
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-01"
+
+summary: >
+  Implements L1/L2 regularization, Inverted Dropout, Batch Normalization, and Layer Normalization
+  from scratch in pure Python & NumPy, demonstrating how to prevent overfitting and stabilize deep networks.
+
+outcomes:
+  - "Implement L1, L2, Inverted Dropout, Batch Normalization, and Layer Normalization from scratch"
+  - "Explain the geometric difference between L1 (sparsity) and L2 (weight decay) penalties"
+  - "Derive the forward and backward passes for Batch Normalization and Layer Normalization"
+  - "Demonstrate overfitting prevention and test loss generalization on high-variance datasets"
+
+sources:
+  - name: "Srivastava et al. (2014) Dropout: A Simple Way to Prevent Neural Networks from Overfitting"
+    url: "https://jmlr.org/papers/v15/srivastava14a.html"
+    type: "Paper"
+  - name: "Ioffe & Szegedy (2015) Batch Normalization: Accelerating Deep Network Training"
+    url: "https://arxiv.org/abs/1502.03167"
+    type: "Paper"
+  - name: "Ba et al. (2016) Layer Normalization"
+    url: "https://arxiv.org/abs/1607.06450"
+    type: "Paper"

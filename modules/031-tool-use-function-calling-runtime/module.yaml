@@ -1,0 +1,20 @@
+id: "031-tool-use-function-calling-runtime"
+title: "Tool Use & Function Calling Runtime"
+difficulty: "Advanced"
+prerequisites:
+  - "026-agentic-loop-primitives"
+  - "029-structured-outputs"
+estimated_minutes: 180
+description: >
+  Deep dive into the runtime environment for tool execution and function calling. Covers sandboxing,
+  security controls, rate limiting, audit logging, and safe code execution.
+sources:
+  - id: "toolformer"
+    title: "Toolformer: Language Models Can Teach Themselves to Use Tools"
+    url: "https://arxiv.org/abs/2302.04761"
+  - id: "e2b"
+    title: "E2B Architecture"
+    url: "https://e2b.dev/docs"
+  - id: "owasp"
+    title: "OWASP Top 10 for LLM Applications"
+    url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/"

@@ -1,0 +1,30 @@
+id: 024-vector-databases-indexing
+title: "Vector Databases & Dense Retrieval Indexing (Flat, IVF, HNSW)"
+version: "1.0.0"
+difficulty: "Advanced"
+prerequisites:
+  - "001-perceptron"
+  - "012-bert-gpt-pretraining"
+estimated_minutes: 90
+author: "AI Engineering Academy"
+license: "MIT"
+created_date: "2026-08-02"
+
+summary: >
+  Implements Vector Database indexing algorithms from scratch in pure Python & NumPy:
+  Flat Cosine/L2 distance search, Inverted File Indexing (IVF-Flat) with K-Means clustering,
+  Hierarchical Navigable Small World (HNSW) graph indexing, and sub-linear ANN retrieval.
+
+outcomes:
+  - "Implement FlatIndex calculating exact top-k nearest neighbors via cosine similarity"
+  - "Implement IVFIndex with K-Means voronoi cell partitioning for fast candidate search"
+  - "Implement HNSWIndex multi-layer graph navigation achieving logarithmic O(log N) search complexity"
+  - "Benchmark search recall vs latency across Flat, IVF, and HNSW indexes"
+
+sources:
+  - name: "Malkov & Yashunin (2018) Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs"
+    url: "https://arxiv.org/abs/1603.09320"
+    type: "Paper"
+  - name: "Jegou et al. (2011) Product Quantization for Nearest Neighbor Search"
+    url: "https://ieee.org/document/54321"
+    type: "Paper"

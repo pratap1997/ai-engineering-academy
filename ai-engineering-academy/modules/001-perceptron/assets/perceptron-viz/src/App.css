@@ -1,0 +1,608 @@
+/* ================================================================
+   App Shell
+================================================================ */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* ================================================================
+   Header
+================================================================ */
+.app-header {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #0d0d20 0%, #0a0a18 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.module-badge {
+  background: rgba(0,212,255,0.12);
+  border: 1px solid rgba(0,212,255,0.3);
+  color: #00d4ff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.header-sub {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.header-right { display: flex; align-items: center; gap: 16px; }
+
+.prediction-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 6px 14px;
+  transition: all 0.4s var(--ease-premium);
+}
+
+.chip-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.chip-value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* ================================================================
+   Phase Progress Bar
+================================================================ */
+.phase-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 24px 10px;
+  position: relative;
+}
+
+.phase-track {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+
+.phase-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #8b5cf6);
+  border-radius: 99px;
+  transition: width 0.4s var(--ease-premium);
+}
+
+.phase-dot {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.phase-dot::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+  transition: all 0.3s var(--ease-premium);
+}
+
+.phase-dot-active::before {
+  background: linear-gradient(135deg, #00d4ff, #8b5cf6);
+  border-color: transparent;
+  box-shadow: 0 0 10px rgba(0,212,255,0.5);
+}
+
+.phase-dot-current::before {
+  transform: scale(1.5);
+  box-shadow: 0 0 20px rgba(0,212,255,0.7), 0 0 40px rgba(0,212,255,0.3);
+}
+
+.phase-dot-label {
+  font-size: 9px;
+  color: var(--text-faint);
+  letter-spacing: 0.5px;
+  transition: color 0.3s;
+}
+
+.phase-dot-active .phase-dot-label,
+.phase-dot-current .phase-dot-label {
+  color: rgba(0,212,255,0.8);
+}
+
+/* ================================================================
+   Main Layout
+================================================================ */
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px 1fr 280px;
+  gap: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ================================================================
+   Panels
+================================================================ */
+.panel {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.panel-controls {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.panel-diagram {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 12px;
+  position: relative;
+}
+
+.panel-computation {
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ================================================================
+   Panel Sections
+================================================================ */
+.panel-section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-section:last-child { border-bottom: none; }
+
+.panel-heading {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* ================================================================
+   Slider Rows
+================================================================ */
+.slider-row { margin-bottom: 12px; }
+.slider-row:last-child { margin-bottom: 0; }
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.slider-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.slider-value {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.slider-sublabel {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.slider-track-wrap {
+  position: relative;
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 99px;
+  border: 1px solid var(--border);
+}
+
+.slider-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 99px;
+  opacity: 0.6;
+  pointer-events: none;
+  transition: width 0.15s var(--ease-premium);
+}
+
+.slider-input {
+  position: absolute;
+  inset: -4px 0;
+  width: 100%;
+  opacity: 0;
+  cursor: pointer;
+  height: 14px;
+}
+
+/* ================================================================
+   Preset Buttons
+================================================================ */
+.preset-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.preset-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--mono);
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-premium);
+  letter-spacing: 0.5px;
+}
+
+.preset-btn:hover {
+  background: rgba(0,212,255,0.08);
+  border-color: rgba(0,212,255,0.3);
+  color: #00d4ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,212,255,0.15);
+}
+
+.preset-btn:active { transform: translateY(0); }
+
+/* ================================================================
+   Truth Table
+================================================================ */
+.truth-table { width: 100%; }
+
+.truth-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.truth-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.truth-table th {
+  color: var(--text-muted);
+  padding: 4px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.truth-table td {
+  padding: 5px 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: color 0.3s;
+}
+
+.truth-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+/* ================================================================
+   SVG Diagram
+================================================================ */
+.diagram-svg-wrap {
+  flex: 1;
+  width: 100%;
+  max-height: calc(100% - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.network-svg {
+  width: 100%;
+  height: 100%;
+  max-width: 840px;
+}
+
+/* ================================================================
+   Diagram Controls
+================================================================ */
+.diagram-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.btn-run {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #00d4ff18, #8b5cf618);
+  border: 1px solid rgba(0,212,255,0.4);
+  border-radius: var(--radius-sm);
+  color: #00d4ff;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font);
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-premium);
+  letter-spacing: 0.3px;
+}
+
+.btn-run:hover {
+  background: linear-gradient(135deg, #00d4ff28, #8b5cf628);
+  box-shadow: 0 0 20px rgba(0,212,255,0.25), 0 0 40px rgba(139,92,246,0.15);
+  border-color: rgba(0,212,255,0.6);
+}
+
+.btn-run-playing {
+  border-color: rgba(239,68,68,0.4);
+  color: #ef4444;
+  background: rgba(239,68,68,0.1);
+}
+
+.btn-run-playing:hover {
+  background: rgba(239,68,68,0.15);
+  box-shadow: 0 0 20px rgba(239,68,68,0.2);
+  border-color: rgba(239,68,68,0.6);
+}
+
+.btn-icon { font-size: 11px; }
+
+.btn-reset {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: var(--font);
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-premium);
+}
+
+.btn-reset:hover {
+  border-color: rgba(255,255,255,0.2);
+  color: var(--text);
+}
+
+.phase-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ================================================================
+   Computation Panel
+================================================================ */
+.comp-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.comp-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.comp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comp-label {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.comp-expr {
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.comp-equals {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+
+.comp-result {
+  background: var(--surface-2);
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 15px;
+  transition: border-color 0.3s;
+}
+
+.comp-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.comp-output {
+  border: 1px solid;
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  transition: all 0.4s var(--ease-premium);
+}
+
+.comp-output-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.comp-output-value {
+  font-family: var(--mono);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.comp-output-interp {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+
+.comp-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.comp-placeholder-text {
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* ================================================================
+   Step Chart
+================================================================ */
+.step-chart-wrap {
+  background: rgba(139,92,246,0.06);
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  margin-top: 4px;
+}
+
+/* ================================================================
+   Equation Reference
+================================================================ */
+.eq-ref {
+  padding: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eq-ref-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.eq-line {
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* ================================================================
+   Footer
+================================================================ */
+.app-footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
+/* ================================================================
+   Responsive
+================================================================ */
+@media (max-width: 1100px) {
+  .app-main { grid-template-columns: 220px 1fr 240px; }
+}
+
+@media (max-width: 860px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    overflow-y: auto;
+  }
+  .panel-controls, .panel-computation {
+    border: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-diagram { min-height: 400px; }
+}
