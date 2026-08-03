@@ -1,139 +1,112 @@
 import React from 'react';
-import { Search, CheckCircle2, Cpu, Grid, GitFork } from 'lucide-react';
-import type { PhaseId } from '../types';
+import { Search, Bot, Compass, Map, FolderGit2, BookOpen } from 'lucide-react';
 
 interface HeaderProps {
-  searchQuery: string;
-  setSearchQuery: (q: string) => void;
-  selectedPhase: PhaseId | 'all';
-  setSelectedPhase: (p: PhaseId | 'all') => void;
-  viewMode: 'grid' | 'roadmap';
-  setViewMode: (v: 'grid' | 'roadmap') => void;
+  activeTab: 'learn' | 'roadmap' | 'projects' | 'library';
+  setActiveTab: (tab: 'learn' | 'roadmap' | 'projects' | 'library') => void;
+  onOpenSearch: () => void;
+  onOpenTutor: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  searchQuery,
-  setSearchQuery,
-  selectedPhase,
-  setSelectedPhase,
-  viewMode,
-  setViewMode
+  activeTab,
+  setActiveTab,
+  onOpenSearch,
+  onOpenTutor,
 }) => {
   return (
-    <header className="glass-header sticky top-0 z-40 px-6 py-4 mb-8">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 bg-[#0B0D12]/90 backdrop-blur-md border-b border-white/5 px-6 py-3">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         
-        {/* Brand Logo & Badges */}
-        <div className="flex items-center gap-4">
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-500 to-violet-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-            <Cpu className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold tracking-tight gradient-text-rainbow">
-                AI Engineering Academy
-              </h1>
-              <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2 py-0.5 rounded-full font-mono font-medium flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> 801/801 Passed
-              </span>
+        {/* Brand & Main Destinations */}
+        <div className="flex items-center gap-8">
+          <div
+            onClick={() => setActiveTab('learn')}
+            className="flex items-center gap-2.5 cursor-pointer group"
+          >
+            <div className="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center font-bold text-xs">
+              AI
             </div>
-            <p className="text-xs text-slate-400 font-medium">
-              50 From-Scratch Modules • Zero-Framework Architecture • Master Curriculum
-            </p>
-          </div>
-        </div>
-
-        {/* Search Bar & View Mode Toggle */}
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <div className="relative flex-1 md:w-72">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search math, concepts, code..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl pl-9 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
-            />
+            <span className="font-heading font-bold text-sm text-slate-100 tracking-tight group-hover:text-indigo-400 transition-colors">
+              AI Engineering Academy
+            </span>
           </div>
 
-          <div className="bg-slate-900/80 p-1 border border-slate-700/60 rounded-xl flex items-center">
+          {/* Primary Navigation Tabs */}
+          <nav className="flex items-center gap-1">
             <button
-              onClick={() => setViewMode('grid')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-                viewMode === 'grid'
-                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
+              onClick={() => setActiveTab('learn')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                activeTab === 'learn'
+                  ? 'bg-white/10 text-white font-bold'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
               }`}
             >
-              <Grid className="w-3.5 h-3.5" /> Grid
+              <Compass className="w-3.5 h-3.5" /> Learn
             </button>
+
             <button
-              onClick={() => setViewMode('roadmap')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-                viewMode === 'roadmap'
-                  ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
+              onClick={() => setActiveTab('roadmap')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                activeTab === 'roadmap'
+                  ? 'bg-white/10 text-white font-bold'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
               }`}
             >
-              <GitFork className="w-3.5 h-3.5" /> Roadmap
+              <Map className="w-3.5 h-3.5" /> Roadmap
             </button>
-          </div>
+
+            <button
+              onClick={() => setActiveTab('projects')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                activeTab === 'projects'
+                  ? 'bg-white/10 text-white font-bold'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+              }`}
+            >
+              <FolderGit2 className="w-3.5 h-3.5" /> Projects
+            </button>
+
+            <button
+              onClick={() => setActiveTab('library')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                activeTab === 'library'
+                  ? 'bg-white/10 text-white font-bold'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" /> Library
+            </button>
+          </nav>
         </div>
 
-      </div>
+        {/* Right Side: Command Search, Tutor, Profile */}
+        <div className="flex items-center gap-3">
+          
+          <button
+            onClick={onOpenSearch}
+            className="px-3 py-1.5 bg-[#171C26] hover:bg-[#1E2638] border border-white/5 rounded-lg text-xs text-slate-400 flex items-center gap-2 transition-colors font-mono"
+          >
+            <Search className="w-3.5 h-3.5 text-slate-400" />
+            <span>Search...</span>
+            <kbd className="px-1.5 py-0.5 bg-black/40 text-[10px] text-slate-400 rounded border border-white/10">
+              ⌘K
+            </kbd>
+          </button>
 
-      {/* Phase Filter Tabs */}
-      <div className="max-w-7xl mx-auto flex items-center gap-2 mt-4 pt-3 border-t border-slate-800/60 overflow-x-auto pb-1">
-        <button
-          onClick={() => setSelectedPhase('all')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-            selectedPhase === 'all'
-              ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 shadow-sm'
-              : 'bg-slate-900/40 text-slate-400 border border-slate-800 hover:bg-slate-800/60'
-          }`}
-        >
-          All 50 Modules
-        </button>
-        <button
-          onClick={() => setSelectedPhase('phase1')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-            selectedPhase === 'phase1'
-              ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
-              : 'bg-slate-900/40 text-slate-400 border border-slate-800 hover:bg-slate-800/60'
-          }`}
-        >
-          Phase 1: Foundations (001-014)
-        </button>
-        <button
-          onClick={() => setSelectedPhase('phase2')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-            selectedPhase === 'phase2'
-              ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30'
-              : 'bg-slate-900/40 text-slate-400 border border-slate-800 hover:bg-slate-800/60'
-          }`}
-        >
-          Phase 2: LLM Architectures (015-025)
-        </button>
-        <button
-          onClick={() => setSelectedPhase('phase3')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-            selectedPhase === 'phase3'
-              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-              : 'bg-slate-900/40 text-slate-400 border border-slate-800 hover:bg-slate-800/60'
-          }`}
-        >
-          Phase 3: Agent Swarms (026-035)
-        </button>
-        <button
-          onClick={() => setSelectedPhase('phase4')}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-            selectedPhase === 'phase4'
-              ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-              : 'bg-slate-900/40 text-slate-400 border border-slate-800 hover:bg-slate-800/60'
-          }`}
-        >
-          Phase 4: Capstone & Multimodal (036-050)
-        </button>
+          <button
+            onClick={onOpenTutor}
+            className="btn-subtle text-xs py-1.5 px-3 text-indigo-300 border-indigo-500/30 bg-indigo-500/10 hover:bg-indigo-500/20"
+          >
+            <Bot className="w-3.5 h-3.5 text-indigo-400" /> Mentor
+          </button>
+
+          <div className="w-8 h-8 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-slate-300 text-xs font-bold font-mono cursor-pointer hover:border-indigo-400 transition-colors">
+            MP
+          </div>
+
+        </div>
+
       </div>
     </header>
   );

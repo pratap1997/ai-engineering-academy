@@ -1,70 +1,156 @@
-import React from 'react';
-import type { ModuleData, PhaseInfo } from '../types';
-import { ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { MODULES } from '../modulesData';
+import type { ModuleData, PhaseId } from '../types';
+import { ChevronDown, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 interface RoadmapViewProps {
-  phases: PhaseInfo[];
-  modules: ModuleData[];
-  onOpenDetail: (m: ModuleData) => void;
+  onOpenModule: (m: ModuleData) => void;
 }
 
-export const RoadmapView: React.FC<RoadmapViewProps> = ({ phases, modules, onOpenDetail }) => {
+export const RoadmapView: React.FC<RoadmapViewProps> = ({ onOpenModule }) => {
+  const [expandedPhases, setExpandedPhases] = useState<Record<PhaseId, boolean>>({
+    phase1: true,
+    phase2: false,
+    phase3: false,
+    phase4: false,
+  });
+
+  const togglePhase = (p: PhaseId) => {
+    setExpandedPhases((prev) => ({ ...prev, [p]: !prev[p] }));
+  };
+
+  const phases: Array<{ id: PhaseId; title: string; subtitle: string; count: number; hours: number; modules: ModuleData[] }> = [
+    {
+      id: 'phase1',
+      title: 'Phase 1 · Neural Network Foundations',
+      subtitle: 'Build neural networks from first principles. Understand how models learn before using frameworks.',
+      count: 14,
+      hours: 18,
+      modules: MODULES.filter((m) => m.phaseId === 'phase1'),
+    },
+    {
+      id: 'phase2',
+      title: 'Phase 2 · LLM Architectures & Transformers',
+      subtitle: 'Attention mechanisms, KV-Cache, Quantization, MoE, FlashAttention, and DeepSeek MLA.',
+      count: 11,
+      hours: 24,
+      modules: MODULES.filter((m) => m.phaseId === 'phase2'),
+    },
+    {
+      id: 'phase3',
+      title: 'Phase 3 · Agent Swarms & Tool Execution',
+      subtitle: 'Agentic loops, MCP protocol, PEFT LoRA, RLHF/DPO alignment, evaluation, and tracing.',
+      count: 10,
+      hours: 20,
+      modules: MODULES.filter((m) => m.phaseId === 'phase3'),
+    },
+    {
+      id: 'phase4',
+      title: 'Phase 4 · Capstones & Multimodal AI',
+      subtitle: 'Graph RAG, Vision-Language Models, Long-Context RoPE, Autonomous Coding Agents, Capstone.',
+      count: 15,
+      hours: 32,
+      modules: MODULES.filter((m) => m.phaseId === 'phase4'),
+    },
+  ];
+
   return (
-    <div className="space-y-12 py-4">
-      {phases.map((phase) => {
-        const phaseModules = modules.filter((m) => m.phaseId === phase.id);
-        if (phaseModules.length === 0) return null;
+    <div className="space-y-6 animate-fade-in">
+      
+      {/* Header */}
+      <div>
+        <h2 className="text-2xl font-bold text-slate-100 font-heading">
+          Curriculum Roadmap
+        </h2>
+        <p className="text-xs text-slate-400 mt-1 font-medium">
+          A progressive causal learning path designed to build permanent AI engineering capability.
+        </p>
+      </div>
 
-        return (
-          <div key={phase.id} className="relative pl-6 border-l-2 border-slate-800 space-y-6">
-            
-            {/* Phase Node Dot */}
-            <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-900 border-2 border-cyan-400 shadow-md shadow-cyan-500/50" />
+      {/* Progressive Phases List */}
+      <div className="space-y-4">
+        {phases.map((phase) => {
+          const isExpanded = expandedPhases[phase.id];
 
-            {/* Phase Banner */}
-            <div className="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
-              <div className="flex items-center justify-between gap-4 mb-2">
-                <span className={`text-xs font-bold px-3 py-1 rounded-full border ${phase.badgeClass}`}>
-                  {phase.range}
-                </span>
-                <span className="text-xs text-slate-400 font-mono font-medium">
-                  {phaseModules.length} Modules Active
-                </span>
-              </div>
-              <h2 className="text-xl font-bold text-slate-100 mb-1">{phase.name}</h2>
-              <p className="text-xs text-slate-400">{phase.description}</p>
-            </div>
-
-            {/* Module Nodes Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {phaseModules.map((module) => (
-                <div
-                  key={module.id}
-                  onClick={() => onOpenDetail(module)}
-                  className="bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800/80 hover:border-cyan-500/40 p-4 rounded-xl cursor-pointer transition-all duration-200 group flex items-start justify-between"
-                >
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-mono text-xs font-bold text-cyan-400">#{module.id}</span>
-                      <span className="text-[10px] text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/60 font-mono">
-                        {module.testCount}/{module.testCount} Tests
-                      </span>
-                    </div>
-                    <h4 className="text-sm font-bold text-slate-200 group-hover:text-cyan-300 transition-colors line-clamp-1">
-                      {module.title}
-                    </h4>
-                    <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">
-                      {module.subtitle}
-                    </p>
+          return (
+            <div
+              key={phase.id}
+              className="panel-card overflow-hidden border-white/5 transition-all"
+            >
+              {/* Phase Collapsible Header */}
+              <div
+                onClick={() => togglePhase(phase.id)}
+                className="p-5 bg-[#11151D] hover:bg-[#171C26] cursor-pointer flex items-center justify-between transition-colors select-none"
+              >
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-base font-bold text-slate-100 font-heading">
+                      {phase.title}
+                    </h3>
+                    <span className="text-[11px] font-mono text-slate-400 bg-white/5 px-2.5 py-0.5 rounded border border-white/5">
+                      {phase.count} modules · ~{phase.hours} hours
+                    </span>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-cyan-400 transition-colors mt-1 shrink-0" />
+                  <p className="text-xs text-slate-400 font-medium">
+                    {phase.subtitle}
+                  </p>
                 </div>
-              ))}
-            </div>
 
-          </div>
-        );
-      })}
+                <div className="text-slate-400 hover:text-slate-200">
+                  {isExpanded ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                </div>
+              </div>
+
+              {/* Collapsible Content */}
+              {isExpanded && (
+                <div className="p-5 border-t border-white/5 bg-[#0B0D12]/60 space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {phase.modules.map((m, idx) => (
+                      <div
+                        key={m.id}
+                        onClick={() => onOpenModule(m)}
+                        className="panel-card p-4 hover:border-indigo-500/40 cursor-pointer transition-all flex flex-col justify-between group"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-xs font-mono">
+                            <span className="text-indigo-400 font-bold">#{m.id}</span>
+                            <span className="text-slate-500">{m.estimatedMinutes}m</span>
+                          </div>
+                          
+                          <h4 className="text-sm font-bold text-slate-100 group-hover:text-indigo-300 transition-colors">
+                            {m.title}
+                          </h4>
+                          
+                          <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                            {m.subtitle}
+                          </p>
+                        </div>
+
+                        <div className="pt-3 mt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono">
+                          {idx === 0 ? (
+                            <span className="text-emerald-400 font-bold flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3" /> Verified
+                            </span>
+                          ) : (
+                            <span className="text-slate-500 flex items-center gap-1">
+                              ○ Upcoming
+                            </span>
+                          )}
+                          <span className="text-indigo-400 group-hover:translate-x-1 transition-transform">
+                            View →
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            </div>
+          );
+        })}
+      </div>
+
     </div>
   );
 };
