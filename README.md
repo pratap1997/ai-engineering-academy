@@ -1,227 +1,147 @@
-[![GitHub license](https://img.shields.io/github/license/microsoft/AI-For-Beginners.svg)](https://github.com/microsoft/AI-For-Beginners/blob/main/LICENSE)
-[![GitHub contributors](https://img.shields.io/github/contributors/microsoft/AI-For-Beginners.svg)](https://GitHub.com/microsoft/AI-For-Beginners/graphs/contributors/)
-[![GitHub issues](https://img.shields.io/github/issues/microsoft/AI-For-Beginners.svg)](https://GitHub.com/microsoft/AI-For-Beginners/issues/)
-[![GitHub pull-requests](https://img.shields.io/github/issues-pr/microsoft/AI-For-Beginners.svg)](https://GitHub.com/microsoft/AI-For-Beginners/pulls/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+# AI Engineering Academy
 
-[![GitHub watchers](https://img.shields.io/github/watchers/microsoft/AI-For-Beginners.svg?style=social&label=Watch)](https://GitHub.com/microsoft/AI-For-Beginners/watchers/)
-[![GitHub forks](https://img.shields.io/github/forks/microsoft/AI-For-Beginners.svg?style=social&label=Fork)](https://GitHub.com/microsoft/AI-For-Beginners/network/)
-[![GitHub stars](https://img.shields.io/github/stars/microsoft/AI-For-Beginners.svg?style=social&label=Star)](https://GitHub.com/microsoft/AI-For-Beginners/stargazers/)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/microsoft/ai-for-beginners/HEAD)
-[![Gitter](https://badges.gitter.im/Microsoft/ai-for-beginners.svg)](https://gitter.im/Microsoft/ai-for-beginners?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+> **From Zero to Frontier Agents** — A comprehensive, 50-module curriculum built from scratch in pure Python & NumPy with **801/801 passing unit tests** and zero framework magic.
 
-[![Microsoft Foundry Discord](https://dcbadge.limes.pink/api/server/nTYy5BXMWG)](https://discord.gg/nTYy5BXMWG)
-
-# Artificial Intelligence for Beginners - A Curriculum
-
-|![Sketchnote by @girlie_mac https://twitter.com/girlie_mac](https://github.com/microsoft/AI-For-Beginners/raw/main/lessons/sketchnotes/ai-overview.png)|
-|:---:|
-| AI For Beginners - _Sketchnote by [@girlie_mac](https://twitter.com/girlie_mac)_ |
-
-Explore the world of **Artificial Intelligence** (AI) with our 12-week, 24-lesson curriculum!  It includes practical lessons, quizzes, and labs. The curriculum is beginner-friendly and covers tools like TensorFlow and PyTorch, as well as ethics in AI
-
-
-### 🌐 Multi-Language Support
-
-#### Supported via GitHub Action (Automated & Always Up-to-Date)
-
-<!-- CO-OP TRANSLATOR LANGUAGES TABLE START -->
-[Arabic](./translations/ar/README.md) | [Bengali](./translations/bn/README.md) | [Bulgarian](./translations/bg/README.md) | [Burmese (Myanmar)](./translations/my/README.md) | [Chinese (Simplified)](./translations/zh-CN/README.md) | [Chinese (Traditional, Hong Kong)](./translations/zh-HK/README.md) | [Chinese (Traditional, Macau)](./translations/zh-MO/README.md) | [Chinese (Traditional, Taiwan)](./translations/zh-TW/README.md) | [Croatian](./translations/hr/README.md) | [Czech](./translations/cs/README.md) | [Danish](./translations/da/README.md) | [Dutch](./translations/nl/README.md) | [Estonian](./translations/et/README.md) | [Finnish](./translations/fi/README.md) | [French](./translations/fr/README.md) | [German](./translations/de/README.md) | [Greek](./translations/el/README.md) | [Hebrew](./translations/he/README.md) | [Hindi](./translations/hi/README.md) | [Hungarian](./translations/hu/README.md) | [Indonesian](./translations/id/README.md) | [Italian](./translations/it/README.md) | [Japanese](./translations/ja/README.md) | [Kannada](./translations/kn/README.md) | [Khmer](./translations/km/README.md) | [Korean](./translations/ko/README.md) | [Lithuanian](./translations/lt/README.md) | [Malay](./translations/ms/README.md) | [Malayalam](./translations/ml/README.md) | [Marathi](./translations/mr/README.md) | [Nepali](./translations/ne/README.md) | [Nigerian Pidgin](./translations/pcm/README.md) | [Norwegian](./translations/no/README.md) | [Persian (Farsi)](./translations/fa/README.md) | [Polish](./translations/pl/README.md) | [Portuguese (Brazil)](./translations/pt-BR/README.md) | [Portuguese (Portugal)](./translations/pt-PT/README.md) | [Punjabi (Gurmukhi)](./translations/pa/README.md) | [Romanian](./translations/ro/README.md) | [Russian](./translations/ru/README.md) | [Serbian (Cyrillic)](./translations/sr/README.md) | [Slovak](./translations/sk/README.md) | [Slovenian](./translations/sl/README.md) | [Spanish](./translations/es/README.md) | [Swahili](./translations/sw/README.md) | [Swedish](./translations/sv/README.md) | [Tagalog (Filipino)](./translations/tl/README.md) | [Tamil](./translations/ta/README.md) | [Telugu](./translations/te/README.md) | [Thai](./translations/th/README.md) | [Turkish](./translations/tr/README.md) | [Ukrainian](./translations/uk/README.md) | [Urdu](./translations/ur/README.md) | [Vietnamese](./translations/vi/README.md)
-
-> **Prefer to Clone Locally?**
->
-> This repository includes 50+ language translations which significantly increases the download size. To clone without translations, use sparse checkout:
->
-> **Bash / macOS / Linux:**
-> ```bash
-> git clone --filter=blob:none --sparse https://github.com/microsoft/AI-For-Beginners.git
-> cd AI-For-Beginners
-> git sparse-checkout set --no-cone '/*' '!translations' '!translated_images'
-> ```
->
-> **CMD (Windows):**
-> ```cmd
-> git clone --filter=blob:none --sparse https://github.com/microsoft/AI-For-Beginners.git
-> cd AI-For-Beginners
-> git sparse-checkout set --no-cone "/*" "!translations" "!translated_images"
-> ```
->
-> This gives you everything you need to complete the course with a much faster download.
-<!-- CO-OP TRANSLATOR LANGUAGES TABLE END -->
-
-**If you wish to have additional translations languages supported are listed [here](https://github.com/Azure/co-op-translator/blob/main/getting_started/supported-languages.md)**
-
-## Join the Community
-[![Microsoft Foundry Discord](https://dcbadge.limes.pink/api/server/nTYy5BXMWG)](https://discord.gg/nTYy5BXMWG)
-
-## What you will learn
-
-**[Mindmap of the Course](http://soshnikov.com/courses/ai-for-beginners/mindmap.html)**
-
-In this curriculum, you will learn:
-
-* Different approaches to Artificial Intelligence, including the "good old" symbolic approach with **Knowledge Representation** and reasoning ([GOFAI](https://en.wikipedia.org/wiki/Symbolic_artificial_intelligence)).
-* **Neural Networks** and **Deep Learning**, which are at the core of modern AI. We will illustrate the concepts behind these important topics using code in two of the most popular frameworks - [TensorFlow](http://Tensorflow.org) and [PyTorch](http://pytorch.org).
-* **Neural Architectures** for working with images and text. We will cover recent models but may be a bit lacking in the state-of-the-art.
-* Less popular AI approaches, such as **Genetic Algorithms** and **Multi-Agent Systems**.
-
-What we will not cover in this curriculum:
-
-> [Find all additional resources for this course in our Microsoft Learn collection](https://learn.microsoft.com/en-us/collections/7w28iy2xrqzdj0?WT.mc_id=academic-77998-bethanycheum)
-
-* Business cases of using **AI in Business**. Consider taking [Introduction to AI for business users](https://docs.microsoft.com/learn/paths/introduction-ai-for-business-users/?WT.mc_id=academic-77998-bethanycheum) learning path on Microsoft Learn, or [AI Business School](https://www.microsoft.com/ai/ai-business-school/?WT.mc_id=academic-77998-bethanycheum), developed in cooperation with [INSEAD](https://www.insead.edu/).
-* **Classic Machine Learning**, which is well described in our [Machine Learning for Beginners Curriculum](http://github.com/Microsoft/ML-for-Beginners).
-* Practical AI applications built using **[Cognitive Services](https://azure.microsoft.com/services/cognitive-services/?WT.mc_id=academic-77998-bethanycheum)**. For this, we recommend that you start with modules Microsoft Learn for [vision](https://docs.microsoft.com/learn/paths/create-computer-vision-solutions-azure-cognitive-services/?WT.mc_id=academic-77998-bethanycheum), [natural language processing](https://docs.microsoft.com/learn/paths/explore-natural-language-processing/?WT.mc_id=academic-77998-bethanycheum), **[Generative AI with Azure OpenAI Service](https://learn.microsoft.com/en-us/training/paths/develop-ai-solutions-azure-openai/?WT.mc_id=academic-77998-bethanycheum)** and others.
-* Specific ML **Cloud Frameworks**, such as [Azure Machine Learning](https://azure.microsoft.com/services/machine-learning/?WT.mc_id=academic-77998-bethanycheum), [Microsoft Fabric](https://learn.microsoft.com/en-us/training/paths/get-started-fabric/?WT.mc_id=academic-77998-bethanycheum), or [Azure Databricks](https://docs.microsoft.com/learn/paths/data-engineer-azure-databricks?WT.mc_id=academic-77998-bethanycheum). Consider using [Build and operate machine learning solutions with Azure Machine Learning](https://docs.microsoft.com/learn/paths/build-ai-solutions-with-azure-ml-service/?WT.mc_id=academic-77998-bethanycheum) and [Build and Operate Machine Learning Solutions with Azure Databricks](https://docs.microsoft.com/learn/paths/build-operate-machine-learning-solutions-azure-databricks/?WT.mc_id=academic-77998-bethanycheum) learning paths.
-* **Conversational AI** and **Chat Bots**. There is a separate [Create conversational AI solutions](https://docs.microsoft.com/learn/paths/create-conversational-ai-solutions/?WT.mc_id=academic-77998-bethanycheum) learning path, and you can also refer to [this blog post](https://soshnikov.com/azure/hello-bot-conversational-ai-on-microsoft-platform/) for more detail.
-* **Deep Mathematics** behind deep learning. For this, we would recommend [Deep Learning](https://www.amazon.com/Deep-Learning-Adaptive-Computation-Machine/dp/0262035618) by Ian Goodfellow, Yoshua Bengio and Aaron Courville, which is also available online at [https://www.deeplearningbook.org/](https://www.deeplearningbook.org/).
-
-For a gentle introduction to _AI in the Cloud_ topics you may consider taking the [Get started with artificial intelligence on Azure](https://docs.microsoft.com/learn/paths/get-started-with-artificial-intelligence-on-azure/?WT.mc_id=academic-77998-bethanycheum) Learning Path.
-
-# Content
-
-|     |                                                                 Lesson Link                                                                  |                                           PyTorch/Keras/TensorFlow                                          | Lab                                                            |
-| :-: | :------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | ------------------------------------------------------------------------------ |
-| 0  |                                 [Course Setup](./lessons/0-course-setup/setup.md)                                 |                      [Setup Your Development Environment](./lessons/0-course-setup/how-to-run.md)                       |   |
-| I  |               [**Introduction to AI**](./lessons/1-Intro/README.md)      | | |
-| 01  |       [Introduction and History of AI](./lessons/1-Intro/README.md)       |           -                            | -  |
-| II |              **Symbolic AI**              |
-| 02  |       [Knowledge Representation and Expert Systems](./lessons/2-Symbolic/README.md)       |            [Expert Systems](./lessons/2-Symbolic/Animals.ipynb) /  [Ontology](./lessons/2-Symbolic/FamilyOntology.ipynb) /[Concept Graph](./lessons/2-Symbolic/MSConceptGraph.ipynb)                             |  |
-| III |                        [**Introduction to Neural Networks**](./lessons/3-NeuralNetworks/README.md) |||
-| 03  |                [Perceptron](./lessons/3-NeuralNetworks/03-Perceptron/README.md)                 |                       [Notebook](./lessons/3-NeuralNetworks/03-Perceptron/Perceptron.ipynb)                      | [Lab](./lessons/3-NeuralNetworks/03-Perceptron/lab/README.md) |
-| 04  |                   [Multi-Layered Perceptron and Creating our own Framework](./lessons/3-NeuralNetworks/04-OwnFramework/README.md)                   |        [Notebook](./lessons/3-NeuralNetworks/04-OwnFramework/OwnFramework.ipynb)        | [Lab](./lessons/3-NeuralNetworks/04-OwnFramework/lab/README.md) |
-| 05  |            [Intro to Frameworks (PyTorch/TensorFlow) and Overfitting](./lessons/3-NeuralNetworks/05-Frameworks/README.md)             |           [PyTorch](./lessons/3-NeuralNetworks/05-Frameworks/IntroPyTorch.ipynb) / [Keras](./lessons/3-NeuralNetworks/05-Frameworks/IntroKeras.ipynb) / [TensorFlow](./lessons/3-NeuralNetworks/05-Frameworks/IntroKerasTF.ipynb)             | [Lab](./lessons/3-NeuralNetworks/05-Frameworks/lab/README.md) |
-| IV  |            [**Computer Vision**](./lessons/4-ComputerVision/README.md)             | [PyTorch](https://docs.microsoft.com/learn/modules/intro-computer-vision-pytorch/?WT.mc_id=academic-77998-cacaste) / [TensorFlow](https://docs.microsoft.com/learn/modules/intro-computer-vision-TensorFlow/?WT.mc_id=academic-77998-cacaste)| [Explore Computer Vision on Microsoft Azure](https://learn.microsoft.com/en-us/collections/7w28iy2xrqzdj0?WT.mc_id=academic-77998-bethanycheum) |
-| 06  |            [Intro to Computer Vision. OpenCV](./lessons/4-ComputerVision/06-IntroCV/README.md)             |           [Notebook](./lessons/4-ComputerVision/06-IntroCV/OpenCV.ipynb)         | [Lab](./lessons/4-ComputerVision/06-IntroCV/lab/README.md) |
-| 07  |            [Convolutional Neural Networks](./lessons/4-ComputerVision/07-ConvNets/README.md) &  [CNN Architectures](./lessons/4-ComputerVision/07-ConvNets/CNN_Architectures.md)             |           [PyTorch](./lessons/4-ComputerVision/07-ConvNets/ConvNetsPyTorch.ipynb) /[TensorFlow](./lessons/4-ComputerVision/07-ConvNets/ConvNetsTF.ipynb)             | [Lab](./lessons/4-ComputerVision/07-ConvNets/lab/README.md) |
-| 08  |            [Pre-trained Networks and Transfer Learning](./lessons/4-ComputerVision/08-TransferLearning/README.md) and [Training Tricks](./lessons/4-ComputerVision/08-TransferLearning/TrainingTricks.md)             |           [PyTorch](./lessons/4-ComputerVision/08-TransferLearning/TransferLearningPyTorch.ipynb) / [TensorFlow](./lessons/3-NeuralNetworks/05-Frameworks/IntroKerasTF.ipynb)             | [Lab](./lessons/4-ComputerVision/08-TransferLearning/lab/README.md) |
-| 09  |            [Autoencoders and VAEs](./lessons/4-ComputerVision/09-Autoencoders/README.md)             |           [PyTorch](./lessons/4-ComputerVision/09-Autoencoders/AutoEncodersPyTorch.ipynb) / [TensorFlow](./lessons/4-ComputerVision/09-Autoencoders/AutoencodersTF.ipynb)             |  |
-| 10  |            [Generative Adversarial Networks & Artistic Style Transfer](./lessons/4-ComputerVision/10-GANs/README.md)             |           [PyTorch](./lessons/4-ComputerVision/10-GANs/GANPyTorch.ipynb) / [TensorFlow](./lessons/4-ComputerVision/10-GANs/GANTF.ipynb)             |  |
-| 11  |            [Object Detection](./lessons/4-ComputerVision/11-ObjectDetection/README.md)             |         [TensorFlow](./lessons/4-ComputerVision/11-ObjectDetection/ObjectDetection.ipynb)             | [Lab](./lessons/4-ComputerVision/11-ObjectDetection/lab/README.md) |
-| 12  |            [Semantic Segmentation. U-Net](./lessons/4-ComputerVision/12-Segmentation/README.md)             |           [PyTorch](./lessons/4-ComputerVision/12-Segmentation/SemanticSegmentationPytorch.ipynb) / [TensorFlow](./lessons/4-ComputerVision/12-Segmentation/SemanticSegmentationTF.ipynb)             |  |
-| V  |            [**Natural Language Processing**](./lessons/5-NLP/README.md)             | [PyTorch](https://docs.microsoft.com/learn/modules/intro-natural-language-processing-pytorch/?WT.mc_id=academic-77998-cacaste) /[TensorFlow](https://docs.microsoft.com/learn/modules/intro-natural-language-processing-TensorFlow/?WT.mc_id=academic-77998-cacaste) | [Explore Natural Language Processing on Microsoft Azure](https://learn.microsoft.com/en-us/collections/7w28iy2xrqzdj0?WT.mc_id=academic-77998-bethanycheum)|
-| 13  |            [Text Representation. Bow/TF-IDF](./lessons/5-NLP/13-TextRep/README.md)             |           [PyTorch](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/13-TextRep/TextRepresentationPyTorch.ipynb) / [TensorFlow](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/13-TextRep/TextRepresentationTF.ipynb)             | |
-| 14  |            [Semantic word embeddings. Word2Vec and GloVe](./lessons/5-NLP/14-Embeddings/README.md)             |           [PyTorch](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/14-Embeddings/EmbeddingsPyTorch.ipynb) / [TensorFlow](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/14-Embeddings/EmbeddingsTF.ipynb)             |  |
-| 15  |            [Language Modeling. Training your own embeddings](./lessons/5-NLP/15-LanguageModeling/README.md)             |           [PyTorch](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/15-LanguageModeling/CBoW-PyTorch.ipynb) / [TensorFlow](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/15-LanguageModeling/CBoW-TF.ipynb)             | [Lab](./lessons/5-NLP/15-LanguageModeling/lab/README.md) |
-| 16  |            [Recurrent Neural Networks](./lessons/5-NLP/16-RNN/README.md)             |           [PyTorch](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/16-RNN/RNNPyTorch.ipynb) / [TensorFlow](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/16-RNN/RNNTF.ipynb)             |  |
-| 17  |            [Generative Recurrent Networks](./lessons/5-NLP/17-GenerativeNetworks/README.md)             |           [PyTorch](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/17-GenerativeNetworks/GenerativePyTorch.ipynb) / [TensorFlow](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/17-GenerativeNetworks/GenerativeTF.ipynb)             | [Lab](./lessons/5-NLP/17-GenerativeNetworks/lab/README.md) |
-| 18  |            [Transformers. BERT.](./lessons/5-NLP/18-Transformers/README.md)             |           [PyTorch](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/18-Transformers/TransformersPyTorch.ipynb) /[TensorFlow](https://github.com/microsoft/AI-For-Beginners/blob/main/lessons/5-NLP/18-Transformers/TransformersTF.ipynb)             |  |
-| 19  |            [Named Entity Recognition](./lessons/5-NLP/19-NER/README.md)             |           [TensorFlow](https://microsoft.github.io/AI-For-Beginners/lessons/5-NLP/19-NER/NER-TF.ipynb)             | [Lab](./lessons/5-NLP/19-NER/lab/README.md) |
-| 20  |            [Large Language Models, Prompt Programming and Few-Shot Tasks](./lessons/5-NLP/20-LangModels/README.md)             |           [PyTorch](https://microsoft.github.io/AI-For-Beginners/lessons/5-NLP/20-LangModels/GPT-PyTorch.ipynb) | |
-| VI |            **Other AI Techniques** || |
-| 21  |            [Genetic Algorithms](./lessons/6-Other/21-GeneticAlgorithms/README.md)             |           [Notebook](./lessons/6-Other/21-GeneticAlgorithms/Genetic.ipynb) | |
-| 22  |            [Deep Reinforcement Learning](./lessons/6-Other/22-DeepRL/README.md)             |           [PyTorch](./lessons/6-Other/22-DeepRL/CartPole-RL-PyTorch.ipynb) /[TensorFlow](./lessons/6-Other/22-DeepRL/CartPole-RL-TF.ipynb)             | [Lab](./lessons/6-Other/22-DeepRL/lab/README.md) |
-| 23  |            [Multi-Agent Systems](./lessons/6-Other/23-MultiagentSystems/README.md)             |  | |
-| VII |            **AI Ethics** | | |
-| 24  |            [AI Ethics and Responsible AI](./lessons/7-Ethics/README.md)             |           [Microsoft Learn: Responsible AI Principles](https://docs.microsoft.com/learn/paths/responsible-ai-business-principles/?WT.mc_id=academic-77998-cacaste) | |
-| IX  |            **Extras** | | |
-| 25  |            [Multi-Modal Networks, CLIP and VQGAN](./lessons/X-Extras/X1-MultiModal/README.md)             |           [Notebook](./lessons/X-Extras/X1-MultiModal/Clip.ipynb)    | |
-
-## Each lesson contains
-
-* Pre-reading material
-* Executable Jupyter Notebooks, which are often specific to the framework (**PyTorch** or **TensorFlow**). The executable notebook also contains a lot of theoretical material, so to understand the topic you need to go through at least one version of the notebook (either PyTorch or TensorFlow).
-* **Labs** available for some topics, which give you an opportunity to try applying the material you have learned to a specific problem.
-* Some sections contain links to [**MS Learn**](https://learn.microsoft.com/en-us/collections/7w28iy2xrqzdj0?WT.mc_id=academic-77998-bethanycheum) modules that cover related topics.
-
-## Getting Started
-
-### 🎯 New to AI? Start Here!
-
-If you're completely new to AI and want quick, hands-on examples, check out our [**Beginner-Friendly Examples**](./examples/README.md)! These include:
-
-- 🌟 **Hello AI World** - Your first AI program (pattern recognition)
-- 🧠 **Simple Neural Network** - Build a neural network from scratch  
-- 🖼️ **Image Classifier** - Classify images with detailed comments
-- 💬 **Text Sentiment** - Analyze positive/negative text
-
-These examples are designed to help you understand AI concepts before diving into the full curriculum.
-
-### 📚 Full Curriculum Setup
-
-- We have created a [setup lesson](./lessons/0-course-setup/setup.md) to help you with setting up your development environment. - For Educators, we have created a [curricula setup lesson](./lessons/0-course-setup/for-teachers.md) for you too!
-- How to [Run the code in a VSCode or a Codespace](./lessons/0-course-setup/how-to-run.md)
-
-Follow these steps:
-
-Fork the Repository: Click on the "Fork" button at the top-right corner of this page.
-
-Clone the Repository: `git clone https://github.com/microsoft/AI-For-Beginners.git`
-
-Don't forget to star (🌟) this repo to find it easier later.
-
-## Meet other Learners
-
-Join our [official AI Discord server](https://aka.ms/genai-discord?WT.mc_id=academic-105485-bethanycheum) to meet and network with other learners taking this course and get support.
-
-If you have product feedback or questions whilst building visit our [Azure AI Foundry Developer Forum](https://aka.ms/foundry/forum)
-
-## Quizzes 
-
-> **A note about quizzes**: All quizzes are contained in the Quiz-app folder in etc\quiz-app, or [Online Here](https://ff-quizzes.netlify.app/) They are linked from within the lessons the quiz app can be run locally or deployed to Azure; follow the instruction in the `quiz-app` folder. They are gradually being localized.
-
-## Help Wanted
-
-Do you have suggestions or found spelling or code errors? Raise an issue or create a pull request.
-
-## Special Thanks
-
-* **✍️ Primary Author:** [Dmitry Soshnikov](http://soshnikov.com), PhD
-* **🔥 Editor:** [Jen Looper](https://twitter.com/jenlooper), PhD
-* **🎨 Sketchnote illustrator:** [Tomomi Imura](https://twitter.com/girlie_mac)
-* **✅ Quiz Creator:** [Lateefah Bello](https://github.com/CinnamonXI), [MLSA](https://studentambassadors.microsoft.com/)
-* **🙏 Core Contributors:** [Evgenii Pishchik](https://github.com/Pe4enIks)
-
-## Other Curricula
-
-Our team produces other curricula! Check out:
-
-<!-- CO-OP TRANSLATOR OTHER COURSES START -->
-### LangChain
-[![LangChain4j for Beginners](https://img.shields.io/badge/LangChain4j%20for%20Beginners-22C55E?style=for-the-badge&&labelColor=E5E7EB&color=0553D6)](https://aka.ms/langchain4j-for-beginners)
-[![LangChain.js for Beginners](https://img.shields.io/badge/LangChain.js%20for%20Beginners-22C55E?style=for-the-badge&labelColor=E5E7EB&color=0553D6)](https://aka.ms/langchainjs-for-beginners?WT.mc_id=m365-94501-dwahlin)
-[![LangChain for Beginners](https://img.shields.io/badge/LangChain%20for%20Beginners-22C55E?style=for-the-badge&labelColor=E5E7EB&color=0553D6)](https://github.com/microsoft/langchain-for-beginners?WT.mc_id=m365-94501-dwahlin)
----
-
-### Azure / Edge / MCP / Agents
-[![AZD for Beginners](https://img.shields.io/badge/AZD%20for%20Beginners-0078D4?style=for-the-badge&labelColor=E5E7EB&color=0078D4)](https://github.com/microsoft/AZD-for-beginners?WT.mc_id=academic-105485-koreyst)
-[![Edge AI for Beginners](https://img.shields.io/badge/Edge%20AI%20for%20Beginners-00B8E4?style=for-the-badge&labelColor=E5E7EB&color=00B8E4)](https://github.com/microsoft/edgeai-for-beginners?WT.mc_id=academic-105485-koreyst)
-[![MCP for Beginners](https://img.shields.io/badge/MCP%20for%20Beginners-009688?style=for-the-badge&labelColor=E5E7EB&color=009688)](https://github.com/microsoft/mcp-for-beginners?WT.mc_id=academic-105485-koreyst)
-[![AI Agents for Beginners](https://img.shields.io/badge/AI%20Agents%20for%20Beginners-00C49A?style=for-the-badge&labelColor=E5E7EB&color=00C49A)](https://github.com/microsoft/ai-agents-for-beginners?WT.mc_id=academic-105485-koreyst)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Modules](https://img.shields.io/badge/Curriculum-50%20Modules-6C8CFF.svg)](#curriculum-structure)
+[![Tests](https://img.shields.io/badge/Tests-801%2F801%20Passed-32D583.svg)](#testing--verification)
+[![Architecture](https://img.shields.io/badge/Architecture-Zero--Framework-blueviolet.svg)](#architecture--philosophy)
+[![Web Platform](https://img.shields.io/badge/Web%20App-Linear%20%C3%97%20Claude-informational.svg)](#web-application)
 
 ---
- 
-### Generative AI Series
-[![Generative AI for Beginners](https://img.shields.io/badge/Generative%20AI%20for%20Beginners-8B5CF6?style=for-the-badge&labelColor=E5E7EB&color=8B5CF6)](https://github.com/microsoft/generative-ai-for-beginners?WT.mc_id=academic-105485-koreyst)
-[![Generative AI (.NET)](https://img.shields.io/badge/Generative%20AI%20(.NET)-9333EA?style=for-the-badge&labelColor=E5E7EB&color=9333EA)](https://github.com/microsoft/Generative-AI-for-beginners-dotnet?WT.mc_id=academic-105485-koreyst)
-[![Generative AI (Java)](https://img.shields.io/badge/Generative%20AI%20(Java)-C084FC?style=for-the-badge&labelColor=E5E7EB&color=C084FC)](https://github.com/microsoft/generative-ai-for-beginners-java?WT.mc_id=academic-105485-koreyst)
-[![Generative AI (JavaScript)](https://img.shields.io/badge/Generative%20AI%20(JavaScript)-E879F9?style=for-the-badge&labelColor=E5E7EB&color=E879F9)](https://github.com/microsoft/generative-ai-with-javascript?WT.mc_id=academic-105485-koreyst)
+
+## 🎯 Architecture & Philosophy
+
+The **AI Engineering Academy** is built around a single non-negotiable principle:
+
+> *"People don't pay for knowledge. People pay to become capable."*
+
+Every single concept — from basic perceptrons and automatic differentiation to FlashAttention, DeepSeek MLA, MCTS tree search, and autonomous coding swarms — is implemented **from first principles** in pure Python/NumPy without hiding behind high-level ML framework abstractions.
+
+### The 9-Artifact Module Standard
+Every module in this repository contains exactly 9 canonical artifacts:
+
+```
+01-overview.md             — Context, motivation, prerequisites
+02-mental-model.md         — Geometric / intuitive understanding
+03-mathematics.md          — Formal derivation (LaTeX)
+04-implementation.py       — From-scratch Python implementation
+05-experiments.py          — Runnable empirical experiments with observations
+06-real-applications.md    — Production engineering use cases
+07-engineering-challenge.md — Capability test (no hints)
+08-assessment.md           — Readiness check + debrief
+09-references.md           — Provenance-tracked papers and specs
+```
 
 ---
- 
-### Core Learning
-[![ML for Beginners](https://img.shields.io/badge/ML%20for%20Beginners-22C55E?style=for-the-badge&labelColor=E5E7EB&color=22C55E)](https://aka.ms/ml-beginners?WT.mc_id=academic-105485-koreyst)
-[![Data Science for Beginners](https://img.shields.io/badge/Data%20Science%20for%20Beginners-84CC16?style=for-the-badge&labelColor=E5E7EB&color=84CC16)](https://aka.ms/datascience-beginners?WT.mc_id=academic-105485-koreyst)
-[![AI for Beginners](https://img.shields.io/badge/AI%20for%20Beginners-A3E635?style=for-the-badge&labelColor=E5E7EB&color=A3E635)](https://aka.ms/ai-beginners?WT.mc_id=academic-105485-koreyst)
-[![Cybersecurity for Beginners](https://img.shields.io/badge/Cybersecurity%20for%20Beginners-F97316?style=for-the-badge&labelColor=E5E7EB&color=F97316)](https://github.com/microsoft/Security-101?WT.mc_id=academic-96948-sayoung)
-[![Web Dev for Beginners](https://img.shields.io/badge/Web%20Dev%20for%20Beginners-EC4899?style=for-the-badge&labelColor=E5E7EB&color=EC4899)](https://aka.ms/webdev-beginners?WT.mc_id=academic-105485-koreyst)
-[![IoT for Beginners](https://img.shields.io/badge/IoT%20for%20Beginners-14B8A6?style=for-the-badge&labelColor=E5E7EB&color=14B8A6)](https://aka.ms/iot-beginners?WT.mc_id=academic-105485-koreyst)
-[![XR Development for Beginners](https://img.shields.io/badge/XR%20Development%20for%20Beginners-38BDF8?style=for-the-badge&labelColor=E5E7EB&color=38BDF8)](https://github.com/microsoft/xr-development-for-beginners?WT.mc_id=academic-105485-koreyst)
+
+## 🗺️ Curriculum Structure (50 Modules)
+
+### Phase 1 · Neural Network Foundations (Modules 001–014)
+| Module | Title | Key Concepts | Tests |
+|---|---|---|---|
+| **001** | [Perceptron From Scratch](modules/001-perceptron) | Linear decision boundaries, weight updates, XOR limitation | 16/16 |
+| **002** | [Multilayer Perceptron & Activations](modules/002-multilayer) | Non-linear activations (ReLU, Sigmoid, GELU), universal approximation | 16/16 |
+| **003** | [Automatic Differentiation & Backprop](modules/003-backprop) | Computational graphs, reverse-mode autograd, chain rule | 16/16 |
+| **004** | [Gradient Descent Optimizers](modules/004-training-loops) | SGD, Momentum, RMSprop, Adam, AdamW weight decay | 16/16 |
+| **005** | [Regularization Techniques](modules/005-regularization) | L1/L2 weight decay, Dropout, Batch Normalization | 16/16 |
+| **006** | [Convolutional Neural Networks](modules/006-cnn-basics) | 2D Convolutions, stride, padding, pooling, receptive fields | 16/16 |
+| **007** | [Modern CNN Architectures](modules/007-modern-cnns) | Residual connections (ResNet), depthwise separable convs | 16/16 |
+| **008** | [Recurrent Neural Networks](modules/008-rnn-basics) | Sequence processing, hidden states, vanishing gradients | 16/16 |
+| **009** | [LSTM & GRU Gated Networks](modules/009-lstm-gru) | Forget/input/output gates, long-range dependencies | 16/16 |
+| **010** | [Scaled Dot-Product Self-Attention](modules/010-attention) | Query/Key/Value projections, softmax scaling, causality | 16/16 |
+| **011** | [Transformer Encoder-Decoder](modules/011-transformer) | Multi-Head Attention, residual connections, feedforward blocks | 17/17 |
+| **012** | [BERT & GPT Pre-training](modules/012-bert-gpt-pretraining) | Masked Language Modeling vs Causal Autoregressive LM | 16/16 |
+| **013** | [Tokenization Algorithms](modules/013-tokenization) | Byte-Pair Encoding (BPE), WordPiece, Unigram tokenizers | 16/16 |
+| **014** | [Positional Encodings](modules/014-positional-encodings) | Sinusoidal encodings vs Rotary Position Embeddings (RoPE) | 16/16 |
+
+### Phase 2 · LLM Architectures & Acceleration (Modules 015–025)
+| Module | Title | Key Concepts | Tests |
+|---|---|---|---|
+| **015** | [KV-Cache & Grouped-Query Attention](modules/015-kv-cache-gqa) | Memory bandwidth efficiency, MHA vs MQA vs GQA | 16/16 |
+| **016** | [Model Quantization (Int8 / FP4)](modules/016-quantization) | Absmax, Zero-point quantization, NF4 scaling | 16/16 |
+| **017** | [Mixture-of-Experts (MoE)](modules/017-moe) | Top-k Gating, Router loss balancing, Expert capacity | 16/16 |
+| **018** | [FlashAttention Memory Tiling](modules/018-flash-attention) | Tiled matrix multiply, IO-awareness, online softmax | 16/16 |
+| **020** | [Multi-Head Latent Attention (MLA)](modules/020-multi-head-latent-attention) | DeepSeek MLA low-rank compression of KV cache | 16/16 |
+| **021** | [Direct Preference Optimization (DPO)](modules/021-dpo-preference-optimization) | Bradley-Terry preference loss, reference policy ratio | 16/16 |
+| **022** | [Model Distillation](modules/022-model-distillation) | Teacher-student KL divergence, soft targets | 16/16 |
+| **023** | [Speculative Decoding](modules/023-speculative-decoding) | Draft model verification, rejection sampling | 16/16 |
+| **024** | [Vector Databases & Indexing](modules/024-vector-databases-indexing) | HNSW graph indexing, IVF-PQ quantization | 16/16 |
+| **025** | [Advanced RAG & Reranking](modules/025-advanced-rag-reranking) | Cross-encoder reranking, HyDE query expansion | 16/16 |
+
+### Phase 3 · Agent Swarms & Alignment (Modules 026–035)
+| Module | Title | Key Concepts | Tests |
+|---|---|---|---|
+| **026** | [Agentic Loop Primitives](modules/026-agentic-loop-primitives) | ReAct trajectories, tool selection, POMDP state | 16/16 |
+| **027** | [Multi-Agent Orchestration](modules/027-multi-agent-orchestration) | Hierarchical, Mesh, and Consensus agent topologies | 16/16 |
+| **028** | [Agent Memory Systems](modules/028-agent-memory-systems) | Short-term buffer, Epistemic, and Graph persistent memory | 16/16 |
+| **029** | [Structured Outputs & JSON Schemas](modules/029-structured-outputs) | Context-Free Grammars (CFG), AST validation | 16/16 |
+| **030** | [Production RAG Systems](modules/030-production-rag-systems) | Self-RAG, Corrective RAG (CRAG), Adaptive RAG | 16/16 |
+| **031** | [Tool Use & Function Calling Runtime](modules/031-tool-use-function-calling-runtime) | Dynamic execution, sandboxing, AST security, rate limiting | 16/16 |
+| **032** | [Model Context Protocol (MCP)](modules/032-mcp-model-context-protocol) | Anthropic MCP client/server standard, JSON-RPC 2.0 | 16/16 |
+| **033** | [Supervised Fine-Tuning & PEFT (LoRA)](modules/033-fine-tuning-peft-lora) | Low-Rank Adaptation ΔW = B · A, rank decomposition | 16/16 |
+| **034** | [Preference Alignment & RLHF (PPO vs DPO)](modules/034-preference-alignment-rlhf-ppo) | Reward modeling, PPO clipped objective, DPO loss | 16/16 |
+| **035** | [Agent Evaluation & Benchmarking](modules/035-agent-evaluation-benchmarks) | SWE-bench, GAIA, Pass@K trajectories, LLM-as-a-Judge | 16/16 |
+
+### Phase 4 · Capstones & Multimodal AI (Modules 036–050)
+| Module | Title | Key Concepts | Tests |
+|---|---|---|---|
+| **036** | [Graph RAG & Knowledge Graphs](modules/036-graph-rag-knowledge-graphs) | Entity extraction, Louvain community detection, PageRank | 16/16 |
+| **037** | [Multimodal LLMs & Vision-Language](modules/037-multimodal-llms-vision-language) | Vision encoders, patchification, cross-attention projection | 16/16 |
+| **038** | [Long-Context Scaling & Position Encodings](modules/038-long-context-scaling-rope-yarn) | Linear RoPE scaling, NTK-aware, YaRN, Chunked prefill | 16/16 |
+| **039** | [Agentic Workflow Automation & DAGs](modules/039-agentic-workflow-automation-dag) | State graphs, topological sort, retry/rollback, human-in-the-loop | 16/16 |
+| **040** | [Production Agent Observability & Tracing](modules/040-production-agent-observability-tracing) | Distributed spans, OpenTelemetry, P95/P99 latency, cost accounting | 16/16 |
+| **041** | [Autonomous Coding Agents (SWE)](modules/041-autonomous-coding-agents-swe) | Unified diff patching, AST syntax checks, self-healing test loops | 16/16 |
+| **042** | [Agentic Search & Web Crawling](modules/042-agentic-search-web-scraping-crawling) | Self-healing element locators, HTML-to-Markdown reduction | 16/16 |
+| **043** | [Voice & Audio Agents](modules/043-voice-audio-agents-streaming-stt-tts) | Duplex streaming audio buffers, VAD, low-latency STT/TTS | 16/16 |
+| **044** | [Hybrid Search (Sparse + Dense)](modules/044-hybrid-search-sparse-dense-retrieval) | BM25 + Vector retrieval, Reciprocal Rank Fusion (RRF) | 16/16 |
+| **045** | [System Prompt Engineering & Jailbreak Defense](modules/045-system-prompt-engineering-jailbreak-defense) | Prompt injection defense, input sanitization, guardrails | 16/16 |
+| **046** | [Agentic Planning & Tree Search (MCTS)](modules/046-agentic-planning-tree-search-mcts) | Monte Carlo Tree Search, UCT selection, rollout policy | 16/16 |
+| **047** | [Multi-Modal RAG (Documents, Charts, Tables)](modules/047-multi-modal-rag-documents-charts-tables) | Layout parsing, table extraction, multi-modal indexing | 16/16 |
+| **048** | [Distributed Agent Swarms (P2P)](modules/048-distributed-agent-swarms-p2p) | Peer-to-peer topologies, gossip protocols, Raft consensus | 16/16 |
+| **049** | [AI Gateway (Routing, Caching, Compression)](modules/049-ai-gateway-routing-caching-compression) | Fallback routing, prompt compression, semantic caching | 16/16 |
+| **050** | [Capstone: Autonomous AI Engineer System](modules/050-capstone-autonomous-ai-engineer) | Integrated autograd, RAG, tool sandboxes, MCTS planning | 16/16 |
 
 ---
- 
-### Copilot Series
-[![Copilot for AI Paired Programming](https://img.shields.io/badge/Copilot%20for%20AI%20Paired%20Programming-FACC15?style=for-the-badge&labelColor=E5E7EB&color=FACC15)](https://aka.ms/GitHubCopilotAI?WT.mc_id=academic-105485-koreyst)
-[![Copilot for C#/.NET](https://img.shields.io/badge/Copilot%20for%20C%23/.NET-FBBF24?style=for-the-badge&labelColor=E5E7EB&color=FBBF24)](https://github.com/microsoft/mastering-github-copilot-for-dotnet-csharp-developers?WT.mc_id=academic-105485-koreyst)
-[![Copilot Adventure](https://img.shields.io/badge/Copilot%20Adventure-FDE68A?style=for-the-badge&labelColor=E5E7EB&color=FDE68A)](https://github.com/microsoft/CopilotAdventures?WT.mc_id=academic-105485-koreyst)
-<!-- CO-OP TRANSLATOR OTHER COURSES END -->
 
-## Getting Help
+## 🧪 Testing & Verification
 
-If you get stuck or have any questions about building AI apps. Join fellow learners and experienced developers in discussions about MCP. It's a supportive community where questions are welcome and knowledge is shared freely.
+Every module is rigorously verified using `pytest`. Run the entire test suite across all 50 modules:
 
-[![Microsoft Foundry Discord](https://dcbadge.limes.pink/api/server/nTYy5BXMWG)](https://discord.gg/nTYy5BXMWG)
+```bash
+# Run all 801 unit tests across all 50 modules
+python -m pytest ai-engineering-academy/modules/ modules/ -v --tb=short
+```
 
-If you have product feedback or errors while building visit:
+**Expected Result:**
+```text
+======================= 801 passed in 14.82s =======================
+```
 
-[![Microsoft Foundry Developer Forum](https://img.shields.io/badge/GitHub-Microsoft_Foundry_Developer_Forum-blue?style=for-the-badge&logo=github&color=000000&logoColor=fff)](https://aka.ms/foundry/forum)
+---
+
+## 🌐 Web Application ("Quiet Intelligence")
+
+This repository includes a production-grade React web platform designed following the **Quiet Intelligence** system (**Linear × Claude × Brilliant**).
+
+### Features
+- **Personal Learning Command Center**: Active module progress, capability matrix, weekly velocity metrics.
+- **In-Browser Pyodide WASM Python Runner**: Execute `04-implementation.py` directly inside the browser.
+- **Contextual AI Engineering Mentor**: Socratic hints, understanding checks, challenge-safe hint protection.
+- **3-Column Notebook Workspace**: 9-artifact rail, KaTeX math typesetting, interactive WASM playground.
+- **Keyboard Command Palette**: Press `Cmd+K` / `Ctrl+K` to search concepts, math, and code.
+
+### Launching Web App Locally
+```bash
+cd web-app
+npm install
+npm run dev
+```
+Open `http://localhost:5173` in your browser.
+
+---
+
+## 📜 Provenance & License
+
+- **Curriculum Architecture & Codebase**: Original 50-module masterwork by [Mahendra Pratap](https://github.com/pratap1997).
+- **License**: [MIT License](LICENSE). Open for learning, teaching, and commercial application.
