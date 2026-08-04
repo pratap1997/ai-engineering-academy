@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import type { ModuleData } from '../types';
-import { KaTeXRenderer } from './KaTeXRenderer';
+import { MarkdownRenderer } from './MarkdownRenderer';
 import { CodePlayground } from './CodePlayground';
+import { getModuleArtifactContent } from '../utils/moduleContentLoader';
 import { ArrowLeft, CheckCircle2, Sparkles, AlertCircle, Send, ChevronRight } from 'lucide-react';
 
 interface ModuleWorkspaceProps {
@@ -33,6 +34,19 @@ export const ModuleWorkspace: React.FC<ModuleWorkspaceProps> = ({ module, onBack
     { key: 'references', label: 'References', num: '09', status: 'upcoming' },
   ];
 
+  // Dynamically load markdown or python file content from disk for active artifact & module
+  const diskContent = useMemo(() => {
+    return getModuleArtifactContent(module.id, activeArtifact);
+  }, [module.id, activeArtifact]);
+
+  // Code snippet for implementation tab
+  const pythonCode = useMemo(() => {
+    if (activeArtifact === 'code' && diskContent) {
+      return diskContent;
+    }
+    return module.codeSnippet;
+  }, [activeArtifact, diskContent, module.codeSnippet]);
+
   const handleSendMentor = (text: string) => {
     if (!text.trim()) return;
     const userMsg = text.trim();
@@ -40,7 +54,7 @@ export const ModuleWorkspace: React.FC<ModuleWorkspaceProps> = ({ module, onBack
     setMentorInput('');
 
     setTimeout(() => {
-      let reply = `Great question regarding ${module.title}. In ${activeArtifact}, the key principle is understanding how inputs and weights combine into a decision boundary.`;
+      let reply = `Great question regarding ${module.title}. In ${activeArtifact}, the key principle is understanding how parameters and loss functions interact.`;
       if (userMsg.toLowerCase().includes('xor')) {
         reply = `XOR fails on a single Perceptron because positive points (0,1) & (1,0) cannot be separated from (0,0) & (1,1) by any single straight line! You need at least 2 hidden neurons (MLP) to form a non-linear boundary.`;
       } else if (userMsg.toLowerCase().includes('bias')) {
@@ -117,221 +131,64 @@ export const ModuleWorkspace: React.FC<ModuleWorkspaceProps> = ({ module, onBack
           </div>
         </aside>
 
-        {/* Center Content Column (Max Reading Width 800px, font-size 16px) */}
+        {/* Center Content Column (Max Reading Width 800px) */}
         <main className="flex-1 overflow-y-auto p-6 md:p-12 bg-[#090C10] flex justify-center">
           <div className="w-full max-w-[800px] space-y-8 leading-relaxed text-slate-200 text-base">
             
-            {/* 01 OVERVIEW */}
-            {activeArtifact === 'overview' && (
-              <div className="space-y-6 animate-fade-in">
-                <div>
-                  <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-                    01 // OVERVIEW & HISTORICAL MOTIVATION
-                  </span>
-                  <h2 className="text-3xl md:text-4xl font-bold text-slate-100 font-heading mt-1">
-                    What Problem Does a Perceptron Solve?
-                  </h2>
-                </div>
-
-                <div className="space-y-5 leading-relaxed text-slate-200 text-base">
-                  <p>
-                    Imagine you are trying to teach a machine to make a simple <strong>yes / no decision</strong>.
-                  </p>
-                  <p>
-                    Not a complex one. Not <em>"is this a cat?"</em> or <em>"will this patient survive?"</em>  
-                    Something simpler: <strong>"given two numbers, is their combination above a threshold?"</strong>
-                  </p>
-                  <p>
-                    The perceptron is the simplest possible learning machine for this problem. It takes numerical inputs, weighs each one by importance, adds a bias, and outputs a binary decision: <strong>0 (no) or 1 (yes)</strong>.
-                  </p>
-                </div>
-
-                {/* Canonical Math Box */}
-                <div className="panel-card p-6 space-y-3 border-indigo-500/25 bg-[#121620]">
-                  <div className="text-xs font-mono text-indigo-400 font-bold uppercase">
-                    CANONICAL PERCEPTRON RULE
-                  </div>
-                  <KaTeXRenderer math="y = \operatorname{step}(w^T x + b)" block />
-                  <p className="text-xs text-slate-400 font-mono pt-1">
-                    Where parameter updates occur when prediction error is non-zero:
-                  </p>
-                  <KaTeXRenderer math="w_{t+1} = w_t + \eta \cdot (y - \hat{y}) \cdot x" block />
-                </div>
-
-                {/* History Section */}
-                <div className="space-y-4 pt-2">
-                  <h3 className="text-xl font-bold text-slate-100 font-heading">Historical Context: Mark I Perceptron (1957)</h3>
-                  <p className="text-base text-slate-200 leading-relaxed">
-                    In 1957, Frank Rosenblatt at Cornell built the <strong>Mark I Perceptron</strong> — a physical hardware machine with 400 photocells and potentiometers adjusted by electric motors.
-                  </p>
-                  <p className="text-base text-slate-200 leading-relaxed">
-                    In 1969, Minsky & Papert published <em>Perceptrons</em>, proving mathematically that a single perceptron <strong>cannot solve XOR</strong> because XOR is not linearly separable. This caused the first AI Winter.
-                  </p>
-                </div>
-
-                {/* Learning Outcomes */}
-                <div className="panel-card p-6 space-y-4 bg-[#0E121A]">
-                  <h4 className="text-xs font-mono font-bold text-indigo-400 uppercase">LEARNING OUTCOMES</h4>
-                  <ul className="space-y-3 text-sm font-mono text-slate-200">
-                    <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> Explain weighted sum, bias, and step threshold decision.</li>
-                    <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> Implement a Perceptron in pure Python & NumPy without libraries.</li>
-                    <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> Train on AND/OR logic gates and prove XOR failure.</li>
-                  </ul>
-                </div>
-              </div>
-            )}
-
-            {/* 02 MENTAL MODEL */}
-            {activeArtifact === 'mentalModel' && (
-              <div className="space-y-6 animate-fade-in">
-                <div>
-                  <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-                    02 // GEOMETRIC MENTAL MODEL
-                  </span>
-                  <h2 className="text-3xl font-bold text-slate-100 font-heading mt-1">
-                    The Perceptron as a Weighted Voting System
-                  </h2>
-                </div>
-
-                <div className="space-y-5 text-base text-slate-200 leading-relaxed">
-                  <p>
-                    Forget complex equations for a moment. Imagine a panel of three judges deciding whether to approve a loan:
-                  </p>
-                  <ul className="list-disc pl-6 space-y-2 font-mono text-sm">
-                    <li><strong>Judge A (Credit Score):</strong> weight = +3</li>
-                    <li><strong>Judge B (Employment History):</strong> weight = +2</li>
-                    <li><strong>Judge C (Current Debt):</strong> weight = -2 (negative — high debt argues against)</li>
-                  </ul>
-                  <p>
-                    The chairperson has a standing bias (+1). The panel sums all weighted votes plus the bias. If the sum is zero or greater, approve (1). Otherwise, reject (0).
-                  </p>
-                </div>
-
-                {/* SVG Visual Canvas */}
-                <div className="panel-card p-6 flex flex-col items-center justify-center space-y-4 bg-[#121620]">
-                  <div className="w-full max-w-md h-56 bg-[#090C10] rounded-xl border border-white/10 p-4 flex items-center justify-center">
-                    <svg className="w-full h-full" viewBox="0 0 200 150">
-                      <line x1="0" y1="75" x2="200" y2="75" stroke="rgba(255,255,255,0.06)" strokeDasharray="3,3" />
-                      <line x1="100" y1="0" x2="100" y2="150" stroke="rgba(255,255,255,0.06)" strokeDasharray="3,3" />
-                      <line x1="20" y1="130" x2="180" y2="20" stroke="#6C8CFF" strokeWidth="2" />
-                      <circle cx="50" cy="40" r="4" fill="#8B5CF6" />
-                      <circle cx="80" cy="30" r="4" fill="#8B5CF6" />
-                      <circle cx="140" cy="110" r="4" fill="#32D583" />
-                      <circle cx="160" cy="120" r="4" fill="#32D583" />
-                    </svg>
-                  </div>
-                  <span className="text-xs text-slate-400 font-mono">
-                    Figure 1: 2D linear decision line separating Class 0 (green) and Class 1 (purple).
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* 03 MATHEMATICS */}
-            {activeArtifact === 'math' && (
-              <div className="space-y-6 animate-fade-in">
-                <div>
-                  <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-                    03 // FORMAL MATHEMATICAL DERIVATION
-                  </span>
-                  <h2 className="text-3xl font-bold text-slate-100 font-heading mt-1">
-                    Formal Derivation & Proofs
-                  </h2>
-                </div>
-
-                <div className="space-y-5 text-base text-slate-200 leading-relaxed">
-                  <p>
-                    The inner product of weights and input vector plus bias gives score z:
-                  </p>
-                  <KaTeXRenderer math="z = \sum_{i=1}^n w_i x_i + b = w^T x + b" block />
-
-                  <p>
-                    Passing z into the unit step activation produces binary prediction:
-                  </p>
-                  <KaTeXRenderer math="\hat{y} = \operatorname{step}(z) = \begin{cases} 1 & \text{if } z \ge 0 \\ 0 & \text{if } z < 0 \end{cases}" block />
-
-                  <p>
-                    When prediction error occurs, parameter updates are computed as:
-                  </p>
-                  <KaTeXRenderer math="w_{t+1} = w_t + \eta \cdot (y - \hat{y}) \cdot x" block />
-                  <KaTeXRenderer math="b_{t+1} = b_t + \eta \cdot (y - \hat{y})" block />
-                </div>
-              </div>
-            )}
-
             {/* 04 IMPLEMENTATION (Code Playground) */}
-            {activeArtifact === 'code' && (
+            {activeArtifact === 'code' ? (
               <div className="space-y-6 animate-fade-in">
                 <div>
                   <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
                     04 // FROM-SCRATCH PYTHON PLAYGROUND
                   </span>
                   <h2 className="text-3xl font-bold text-slate-100 font-heading mt-1">
-                    Interactive Python Implementation
+                    {module.title} — Python Implementation
                   </h2>
                   <p className="text-sm text-slate-400 mt-1">
-                    Run pure Python code directly in your browser using WebAssembly.
+                    Run pure Python code directly in your browser using Pyodide WebAssembly.
                   </p>
                 </div>
 
-                <CodePlayground moduleTitle={module.title} initialCode={module.codeSnippet} />
+                <CodePlayground moduleTitle={module.title} initialCode={pythonCode} />
               </div>
-            )}
-
-            {/* 05 EXPERIMENTS */}
-            {activeArtifact === 'experiments' && (
+            ) : (
+              /* DYNAMIC MARKDOWN RENDERER FOR ALL OTHER 8 ARTIFACTS */
               <div className="space-y-6 animate-fade-in">
-                <div>
-                  <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-                    05 // EXPERIMENTS & OBSERVATIONS
-                  </span>
-                  <h2 className="text-3xl font-bold text-slate-100 font-heading mt-1">
-                    Runnable Empirical Experiments
-                  </h2>
-                </div>
-
-                <div className="panel-card p-6 space-y-4 bg-[#121620]">
-                  <h3 className="text-lg font-bold text-slate-100 font-heading">Experiment 1: Removing Bias Term</h3>
-                  <p className="text-base text-slate-200">
-                    What happens when bias b = 0? The decision line is locked to the origin (0,0).
-                  </p>
-                  <button onClick={() => setActiveArtifact('code')} className="btn-indigo text-xs py-2.5 px-5">
-                    Run Bias Experiment in Code Playground →
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Default Fallback for remaining artifacts */}
-            {['applications', 'challenge', 'assessment', 'references'].includes(activeArtifact) && (
-              <div className="space-y-6 animate-fade-in">
-                <div>
-                  <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-                    {activeArtifact.toUpperCase()}
-                  </span>
-                  <h2 className="text-3xl font-bold text-slate-100 font-heading mt-1 capitalize">
-                    {activeArtifact}
-                  </h2>
-                </div>
-
-                <div className="panel-card p-6 space-y-4 bg-[#121620]">
-                  <p className="text-base text-slate-200 leading-relaxed">
-                    Build a binary classifier that trains on non-linearly separable inputs to observe XOR failure.
-                  </p>
-                  <div className="bg-amber-950/20 border border-amber-800/40 p-4 rounded-xl text-xs text-amber-300/90 space-y-1">
-                    <div className="font-bold text-amber-400 flex items-center gap-1.5 text-sm">
-                      <AlertCircle className="w-4 h-4" /> Mentor Mode: Hints Only
+                {diskContent ? (
+                  <MarkdownRenderer content={diskContent} />
+                ) : (
+                  /* Fallback if disk content is loading or fallback mode */
+                  <div className="space-y-6">
+                    <div>
+                      <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
+                        #{module.id} // {activeArtifact.toUpperCase()}
+                      </span>
+                      <h2 className="text-3xl font-bold text-slate-100 font-heading mt-1">
+                        {module.title}
+                      </h2>
                     </div>
-                    <div>Ask the AI Mentor on the right for step-by-step guidance!</div>
+
+                    <div className="panel-card p-6 space-y-4 bg-[#121620]">
+                      <p className="text-base text-slate-200 leading-relaxed">
+                        {module.overview}
+                      </p>
+                      <div className="bg-indigo-950/20 border border-indigo-800/40 p-4 rounded-xl text-xs font-mono text-indigo-300 space-y-1">
+                        <div className="font-bold text-indigo-400 flex items-center gap-1.5 text-sm">
+                          <AlertCircle className="w-4 h-4" /> Lesson Objective
+                        </div>
+                        <div>Master this concept from scratch with mathematical derivations & Python code.</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
 
           </div>
         </main>
 
-        {/* Right Column: Contextual AI Mentor (text-sm font) */}
+        {/* Right Column: Contextual AI Mentor */}
         <aside className="w-80 shrink-0 bg-[#090C10] border-l border-white/5 p-4 flex flex-col justify-between hidden xl:flex">
           <div className="space-y-4 flex-1 flex flex-col justify-between">
             
@@ -368,18 +225,18 @@ export const ModuleWorkspace: React.FC<ModuleWorkspaceProps> = ({ module, onBack
             {/* Quick Socratic Prompt Pills */}
             <div className="space-y-2 pt-2">
               <button
-                onClick={() => handleSendMentor('Explain why a perceptron fails on XOR')}
+                onClick={() => handleSendMentor(`Explain key concept of ${module.title}`)}
                 className="w-full text-left p-2.5 bg-[#121620] hover:bg-[#181E2B] border border-white/5 rounded-xl text-xs text-indigo-300 font-mono flex items-center justify-between transition-colors"
               >
-                <span>Why does Perceptron fail on XOR?</span>
+                <span>Explain key concept</span>
                 <ChevronRight className="w-4 h-4 text-indigo-400" />
               </button>
               
               <button
-                onClick={() => handleSendMentor('Explain what bias does')}
+                onClick={() => handleSendMentor(`Give me a hint for ${activeArtifact}`)}
                 className="w-full text-left p-2.5 bg-[#121620] hover:bg-[#181E2B] border border-white/5 rounded-xl text-xs text-indigo-300 font-mono flex items-center justify-between transition-colors"
               >
-                <span>Why do we need a bias term?</span>
+                <span>Give me a hint for this section</span>
                 <ChevronRight className="w-4 h-4 text-indigo-400" />
               </button>
             </div>
