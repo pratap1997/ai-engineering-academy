@@ -370,3 +370,8 @@ MigrationBackup/
 
 # Mac-specific
 .DS_Store
+
+# Academy local tools & web-app dependencies
+tools/omni-route/
+web-app/node_modules/
+web-app/dist/

@@ -3,9 +3,10 @@ import type { ModuleData } from '../types';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { CodePlayground } from './CodePlayground';
 import { InteractiveVisualizer } from './InteractiveVisualizer';
+import { YouTubePlayerModal } from './YouTubePlayerModal';
 import { getModuleArtifactContent } from '../utils/moduleContentLoader';
 import { generateAIMentorResponse } from '../utils/aiMentorEngine';
-import { ArrowLeft, CheckCircle2, Sparkles, AlertCircle, Send, ChevronRight } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Sparkles, AlertCircle, Send, ChevronRight, Play } from 'lucide-react';
 
 interface ModuleWorkspaceProps {
   module: ModuleData;
@@ -16,6 +17,7 @@ type ArtifactKey = 'overview' | 'mentalModel' | 'math' | 'code' | 'experiments' 
 
 export const ModuleWorkspace: React.FC<ModuleWorkspaceProps> = ({ module, onBack }) => {
   const [activeArtifact, setActiveArtifact] = useState<ArtifactKey>('overview');
+  const [showVideoModal, setShowVideoModal] = useState<boolean>(false);
   const [mentorInput, setMentorInput] = useState('');
   const [mentorMessages, setMentorMessages] = useState<Array<{ role: 'user' | 'assistant'; text: string }>>([
     {
@@ -64,6 +66,18 @@ export const ModuleWorkspace: React.FC<ModuleWorkspaceProps> = ({ module, onBack
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] bg-[#090C10] overflow-hidden select-none">
       
+      {/* YouTube Modal Player Overlay */}
+      {showVideoModal && (
+        <YouTubePlayerModal
+          moduleTitle={module.title}
+          onClose={() => setShowVideoModal(false)}
+          onOpenCode={() => {
+            setShowVideoModal(false);
+            setActiveArtifact('code');
+          }}
+        />
+      )}
+
       {/* Top Breadcrumb Bar */}
       <div className="h-14 shrink-0 bg-[#0E121A] border-b border-white/5 px-6 md:px-8 flex items-center justify-between text-sm">
         
@@ -83,10 +97,24 @@ export const ModuleWorkspace: React.FC<ModuleWorkspaceProps> = ({ module, onBack
           </span>
         </div>
 
-        <div className="flex items-center gap-4 font-mono text-xs">
-          <span className="text-slate-400">Progress: 68%</span>
-          <div className="w-28 bg-[#090C10] h-2 rounded-full overflow-hidden border border-white/5">
-            <div className="bg-indigo-500 h-full w-[68%]" />
+        {/* Watch Masterclass Video Button */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setShowVideoModal(true)}
+            className="btn-subtle text-xs py-1.5 px-3.5 border-red-500/30 text-red-400 hover:bg-red-500/10 flex items-center gap-2 font-mono font-bold"
+          >
+            <svg className="w-4 h-4 fill-current text-red-500" viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            <span>Watch Masterclass Video</span>
+            <Play className="w-3 h-3 fill-current ml-1" />
+          </button>
+
+          <div className="flex items-center gap-3 font-mono text-xs hidden sm:flex">
+            <span className="text-slate-400">Progress: 68%</span>
+            <div className="w-24 bg-[#090C10] h-2 rounded-full overflow-hidden border border-white/5">
+              <div className="bg-indigo-500 h-full w-[68%]" />
+            </div>
           </div>
         </div>
 
