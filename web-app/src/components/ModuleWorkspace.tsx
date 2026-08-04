@@ -3,6 +3,7 @@ import type { ModuleData } from '../types';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { CodePlayground } from './CodePlayground';
 import { getModuleArtifactContent } from '../utils/moduleContentLoader';
+import { generateAIMentorResponse } from '../utils/aiMentorEngine';
 import { ArrowLeft, CheckCircle2, Sparkles, AlertCircle, Send, ChevronRight } from 'lucide-react';
 
 interface ModuleWorkspaceProps {
@@ -54,14 +55,9 @@ export const ModuleWorkspace: React.FC<ModuleWorkspaceProps> = ({ module, onBack
     setMentorInput('');
 
     setTimeout(() => {
-      let reply = `Great question regarding ${module.title}. In ${activeArtifact}, the key principle is understanding how parameters and loss functions interact.`;
-      if (userMsg.toLowerCase().includes('xor')) {
-        reply = `XOR fails on a single Perceptron because positive points (0,1) & (1,0) cannot be separated from (0,0) & (1,1) by any single straight line! You need at least 2 hidden neurons (MLP) to form a non-linear boundary.`;
-      } else if (userMsg.toLowerCase().includes('bias')) {
-        reply = `Without a bias term b, the decision line w₁x₁ + w₂x₂ = 0 is forced to pass directly through the origin (0,0). The bias allows the hyper-plane to shift freely anywhere in space!`;
-      }
-      setMentorMessages((prev) => [...prev, { role: 'assistant', text: reply }]);
-    }, 500);
+      const res = generateAIMentorResponse(module.id, module.title, activeArtifact, userMsg);
+      setMentorMessages((prev) => [...prev, { role: 'assistant', text: res.reply }]);
+    }, 400);
   };
 
   return (
