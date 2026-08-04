@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import type { ModuleData } from '../types';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { CodePlayground } from './CodePlayground';
+import { InteractiveVisualizer } from './InteractiveVisualizer';
 import { getModuleArtifactContent } from '../utils/moduleContentLoader';
 import { generateAIMentorResponse } from '../utils/aiMentorEngine';
 import { ArrowLeft, CheckCircle2, Sparkles, AlertCircle, Send, ChevronRight } from 'lucide-react';
@@ -131,6 +132,11 @@ export const ModuleWorkspace: React.FC<ModuleWorkspaceProps> = ({ module, onBack
         <main className="flex-1 overflow-y-auto p-6 md:p-12 bg-[#090C10] flex justify-center">
           <div className="w-full max-w-[800px] space-y-8 leading-relaxed text-slate-200 text-base">
             
+            {/* Interactive Visualizer for Mental Model or Math Tab */}
+            {(activeArtifact === 'mentalModel' || activeArtifact === 'math') && (
+              <InteractiveVisualizer moduleId={module.id} />
+            )}
+
             {/* 04 IMPLEMENTATION (Code Playground) */}
             {activeArtifact === 'code' ? (
               <div className="space-y-6 animate-fade-in">
