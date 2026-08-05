@@ -1,0 +1,23 @@
+{
+  "module_id": "001",
+  "video_path": "C:\\Users\\Mahendra Pratap\\Desktop\\ai Learning\\tools\\video-generator\\out\\module_001_perceptron.mp4",
+  "thumbnail_path": "C:\\Users\\Mahendra Pratap\\Desktop\\ai Learning\\tools\\video-generator\\out\\module_001_thumbnail.png",
+  "title": "AI Engineering Skool -- Module 001: Perceptron From Scratch",
+  "description": "",
+  "tags": [
+    "AI Engineering",
+    "Machine Learning",
+    "Deep Learning",
+    "Perceptron",
+    "Python From Scratch",
+    "Neural Networks",
+    "3Blue1Brown",
+    "Manim",
+    "Remotion",
+    "NVIDIA Riva",
+    "Vercel"
+  ],
+  "category_id": "27",
+  "website_url": "https://ai-engineering-skool.vercel.app",
+  "github_url": "https://github.com/pratap1997/ai-engineering-academy"
+}

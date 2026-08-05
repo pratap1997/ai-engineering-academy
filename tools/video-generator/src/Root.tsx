@@ -8,15 +8,21 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="MasterclassVideo"
         component={MasterclassVideo}
-        durationInFrames={360} // 6 seconds at 60fps
+        durationInFrames={3960} // Default 66 seconds @ 60fps
         fps={60}
         width={1920}
         height={1080}
+        calculateMetadata={({ props }: { props: any }) => {
+          return {
+            durationInFrames: props.durationInFrames || 3960,
+          };
+        }}
         defaultProps={{
-          title: "AI ENGINEERING ACADEMY",
-          subtitle: "Masterclass: Building Autonomous AI Agents From First Principles",
-          codeSnippet: "class Perceptron:\n    def __init__(self, d_in):\n        self.w = np.zeros(d_in)\n        self.b = 0.0\n    def forward(self, x):\n        return np.step(np.dot(self.w, x) + self.b)",
+          title: "MODULE 001: THE PERCEPTRON",
+          subtitle: "Complete Masterclass: Mathematical Derivation, NumPy Code & XOR Limits",
+          codeSnippet: "class Perceptron:\n    def __init__(self, d_in, lr=0.01):\n        self.w = np.zeros(d_in)\n        self.b = 0.0\n        self.lr = lr\n\n    def predict(self, x):\n        z = np.dot(x, self.w) + self.b\n        return np.where(z >= 0, 1, 0)\n\n    def fit(self, X, y, epochs=100):\n        for _ in range(epochs):\n            for xi, target in zip(X, y):\n                update = self.lr * (target - self.predict(xi))\n                self.w += update * xi\n                self.b += update",
           audioSrc: "audio.wav",
+          durationInFrames: 3960,
         }}
       />
     </>

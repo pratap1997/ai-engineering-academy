@@ -1,7 +1,8 @@
 import React from 'react';
 import { MODULES } from '../modulesData';
 import type { ModuleData } from '../types';
-import { ArrowRight, CheckCircle2, FlaskConical, BookOpen, Code, Brain, Sparkles, ShieldCheck } from 'lucide-react';
+import { ArrowRight, CheckCircle2, FlaskConical, BookOpen, Code, Brain, Sparkles, ShieldCheck, Box } from 'lucide-react';
+import { LossLandscape3D } from './LossLandscape3D';
 
 interface LearnViewProps {
   onOpenModule: (m: ModuleData) => void;
@@ -23,16 +24,16 @@ export const LearnView: React.FC<LearnViewProps> = ({ onOpenModule, onExploreRoa
           </h2>
         </div>
         <p className="text-sm text-[var(--text-secondary)] font-medium max-w-xl">
-          Welcome to the OpenAgent AI Engineering Curriculum — 50 Verified Engineering Modules.
+          Welcome to AI Engineering Skool — 50 Verified Engineering Modules & 3D Interactive Visualizers.
         </p>
       </div>
 
-      {/* Hero Panel: CURRENT MODULE (OpenAgentSkill Decision Snapshot Style) */}
+      {/* Hero Panel: CURRENT MODULE */}
       <div className="panel-card p-6 md:p-8 relative overflow-hidden border-[var(--border-strong)] bg-[var(--bg-surface)]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           {/* Left Column: Context & Actions */}
-          <div className="lg:col-span-7 space-y-5">
+          <div className="lg:col-span-6 space-y-5">
             
             <div className="flex items-center justify-between text-xs font-mono">
               <span className="font-bold uppercase tracking-wider text-[var(--accent-primary)] bg-[var(--bg-elevated)] px-2.5 py-1 rounded border border-[var(--border-subtle)]">
@@ -99,26 +100,9 @@ export const LearnView: React.FC<LearnViewProps> = ({ onOpenModule, onExploreRoa
 
           </div>
 
-          {/* Right Column: Clean SVG Decision Canvas */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="w-full max-w-sm h-60 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl p-4 relative flex items-center justify-center overflow-hidden">
-              <svg className="w-full h-full" viewBox="0 0 200 150">
-                <line x1="0" y1="75" x2="200" y2="75" stroke="var(--border-strong)" strokeDasharray="3,3" />
-                <line x1="100" y1="0" x2="100" y2="150" stroke="var(--border-strong)" strokeDasharray="3,3" />
-                <line x1="20" y1="140" x2="180" y2="20" stroke="var(--text-primary)" strokeWidth="1.5" strokeDasharray="4,4" />
-                <line x1="100" y1="80" x2="70" y2="40" stroke="var(--accent-primary)" strokeWidth="2" />
-                <polygon points="67,37 76,41 72,48" fill="var(--accent-primary)" />
-                <text x="58" y="30" fill="var(--accent-primary)" fontSize="11" fontFamily="monospace" fontWeight="bold">W</text>
-                <circle cx="60" cy="40" r="3.5" fill="#EF4444" />
-                <circle cx="80" cy="30" r="3.5" fill="#EF4444" />
-                <circle cx="100" cy="25" r="3.5" fill="#EF4444" />
-                <circle cx="70" cy="60" r="3.5" fill="#EF4444" />
-                <circle cx="130" cy="110" r="3.5" fill="#10B981" />
-                <circle cx="150" cy="100" r="3.5" fill="#10B981" />
-                <circle cx="160" cy="120" r="3.5" fill="#10B981" />
-                <circle cx="140" cy="130" r="3.5" fill="#10B981" />
-              </svg>
-            </div>
+          {/* Right Column: 3D WebGL Loss Surface Interactive Canvas */}
+          <div className="lg:col-span-6">
+            <LossLandscape3D learningRate={0.06} isTraining={true} />
           </div>
 
         </div>
