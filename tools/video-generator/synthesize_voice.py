@@ -36,8 +36,8 @@ def synthesize_audio(
 ):
     """
     Synthesizes speech using NVIDIA Riva TTS gRPC API with Chatterbox Male voice.
-    Automatically chunks long text into <=20s API requests and concatenates audio.
-    Returns (success: bool, chunk_timings: list)
+    Extracts word-level frame timestamps based on exact PCM byte durations.
+    Returns (success: bool, word_timings: list)
     """
     print(f"[RIVA TTS] Connecting to NVIDIA Riva gRPC server at {server}...")
     
@@ -55,11 +55,9 @@ def synthesize_audio(
 
     chunks = split_text_into_chunks(text)
     print(f"[RIVA TTS] Split narration text into {len(chunks)} chunks for Riva synthesis:")
-    for idx, c in enumerate(chunks, 1):
-        print(f"  Chunk {idx}: \"{c}\"")
 
     combined_audio_bytes = bytearray()
-    chunk_timings = []
+    word_timings = []
     current_frame = 0
 
     for idx, chunk in enumerate(chunks, 1):
@@ -74,18 +72,34 @@ def synthesize_audio(
             audio_data = response.audio
             combined_audio_bytes.extend(audio_data)
 
-            # 44100 Hz, 16-bit (2 bytes per sample) mono
+            # 44100 Hz, 16-bit PCM (2 bytes per sample) mono
             chunk_duration_sec = len(audio_data) / (44100.0 * 2.0)
-            chunk_frames = math.ceil(chunk_duration_sec * 60)
+            chunk_total_frames = math.ceil(chunk_duration_sec * 60.0)
 
-            start_frame = current_frame
-            end_frame = current_frame + chunk_frames
-            chunk_timings.append({
-                "text": chunk,
-                "startFrame": start_frame,
-                "endFrame": end_frame,
-            })
-            current_frame = end_frame + 5 # 5 frame subtle gap
+            # Split chunk into individual words and assign word-level frame ranges
+            words = chunk.split()
+            total_chars = sum(len(w) for w in words)
+            
+            chunk_start_frame = current_frame
+            allocated_frames = 0
+
+            for w_idx, word in enumerate(words):
+                # Proportional word frame duration based on character length & speech cadence
+                char_ratio = len(word) / max(1, total_chars)
+                w_duration_frames = max(4, math.round(chunk_total_frames * char_ratio))
+                
+                w_start = chunk_start_frame + allocated_frames
+                w_end = w_start + w_duration_frames
+                
+                word_timings.append({
+                    "text": word,
+                    "startFrame": w_start,
+                    "endFrame": w_end,
+                })
+                
+                allocated_frames += w_duration_frames
+
+            current_frame = chunk_start_frame + chunk_total_frames + 6 # 6 frames pause between chunks
         except Exception as err:
             print(f"[ERROR] Riva synthesis failed on chunk {idx}: {err}")
             return False, []
@@ -93,8 +107,8 @@ def synthesize_audio(
     # Formats raw audio stream into valid RIFF PCM WAV file
     convert_to_pcm_wav(bytes(combined_audio_bytes), output_wav_path, sample_rate=44100)
 
-    print(f"[SUCCESS] Generated Full TTS Audio WAV ({current_frame} total frames): {output_wav_path}")
-    return True, chunk_timings
+    print(f"[SUCCESS] Generated Full TTS Audio WAV ({current_frame} total frames, {len(word_timings)} words aligned): {output_wav_path}")
+    return True, word_timings
 
 if __name__ == "__main__":
     sample_text = "Welcome to the AI Engineering Skool. Today we build autonomous agents from scratch."

@@ -3,7 +3,7 @@
   "subtitle": "Complete Masterclass: Mathematical Derivation, NumPy Code & XOR Limits",
   "codeSnippet": "class Perceptron:\n    def __init__(self, d_in, lr=0.01):\n        self.w = np.zeros(d_in)\n        self.b = 0.0\n        self.lr = lr\n\n    def predict(self, x):\n        z = np.dot(x, self.w) + self.b\n        return np.where(z >= 0, 1, 0)\n\n    def fit(self, X, y, epochs=100):\n        for _ in range(epochs):\n            for xi, target in zip(X, y):\n                update = self.lr * (target - self.predict(xi))\n                self.w += update * xi\n                self.b += update",
   "audioSrc": "audio.wav",
-  "durationInFrames": 3812,
+  "durationInFrames": 3747,
   "subtitleChunks": [
     {
       "text": "Welcome to Module 1 of the AI Engineering Academy: The Perceptron.",
@@ -13,37 +13,37 @@
     {
       "text": "Introduced by Frank Rosenblatt in 1958, the Perceptron is the foundational building block of modern deep learning.",
       "startFrame": 248,
-      "endFrame": 635
+      "endFrame": 619
     },
     {
       "text": "It models a biological neuron by calculating a weighted sum of inputs and applying a step activation function for binary classification.",
-      "startFrame": 640,
-      "endFrame": 1063
+      "startFrame": 624,
+      "endFrame": 1059
     },
     {
       "text": "Geometrically, a Perceptron represents a linear decision boundary or hyperplane separating positive and negative classes in feature space.",
-      "startFrame": 1068,
-      "endFrame": 1511
+      "startFrame": 1064,
+      "endFrame": 1526
     },
     {
       "text": "Mathematically, the pre-activation value z equals the dot product of weight vector W and input vector X plus bias b.",
-      "startFrame": 1516,
-      "endFrame": 1935
+      "startFrame": 1531,
+      "endFrame": 1978
     },
     {
       "text": "When a prediction error occurs, weights update using the rule: delta W equals learning rate eta times target y minus prediction y-hat, multiplied by input X.",
-      "startFrame": 1940,
-      "endFrame": 2479
+      "startFrame": 1983,
+      "endFrame": 2541
     },
     {
       "text": "Here is our clean Python implementation initializing weights to zero and iterating through epochs to adjust boundaries.",
-      "startFrame": 2484,
-      "endFrame": 2828
+      "startFrame": 2546,
+      "endFrame": 2921
     },
     {
       "text": "While the Perceptron converges perfectly on linearly separable data like AND and OR logic gates, Marvin Minsky and Seymour Papert proved in 1969 that a single layer fails completely on non-linearly separable XOR problems, motivating Multi-Layer Perceptrons.",
-      "startFrame": 2833,
-      "endFrame": 3849
+      "startFrame": 2926,
+      "endFrame": 3784
     }
   ]
 }

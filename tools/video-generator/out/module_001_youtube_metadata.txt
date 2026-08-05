@@ -1,0 +1,24 @@
+AI Engineering Skool -- Module 001: Perceptron From Scratch (Complete Mathematical Derivation & Pure Python Impl)
+
+In this masterclass, we build Perceptron From Scratch from scratch in pure Python and NumPy with ZERO high-level framework dependencies. Learn the underlying mathematics, geometric decision hyperplanes, loss landscapes, and edge-case failure modes.
+
+CHAPTER TIMESTAMPS:
+00:00 - Introduction & Historical Context (Rosenblatt 1958)
+00:10 - Geometric Intuition & Decision Hyperplanes
+00:21 - Formal Mathematical Derivation & Step Activation
+00:35 - Pure Python & NumPy Implementation (Matrix Code Reveal)
+00:47 - Live Weight Update Learning Animation (Scatter Plot)
+00:57 - XOR Limitation & Minsky & Papert 1969 Proof
+
+LIVE WEB APP & OPEN SOURCE REPOSITORY:
+- Live Interactive Web App: https://ai-engineering-skool.vercel.app
+- GitHub Open Source Codebase: https://github.com/pratap1997/ai-engineering-academy
+
+KEY CONCEPTS COVERED:
+1. Linear Decision Boundaries z = W^T X + b
+2. Heaviside Step Activation Function
+3. Perceptron Weight Update Rule Delta W = eta * (y - y_hat) * X
+4. Convergence Theorem on Linearly Separable Datasets
+5. XOR Non-Linear Impossibility & Multi-Layer Perceptron Motivation
+
+#AI #MachineLearning #DeepLearning #Python #AIEngineering #NeuralNetworks #FromScratch #Vercel #OpenSource

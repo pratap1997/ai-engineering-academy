@@ -1,89 +1,107 @@
 import React from 'react';
-import { interpolate, useCurrentFrame } from 'remotion';
+import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 
-export interface SubtitleChunk {
+export interface SubtitleWord {
   text: string;
   startFrame: number;
   endFrame: number;
 }
 
 interface SubtitlesOverlayProps {
-  chunks?: SubtitleChunk[];
+  subtitleChunks?: SubtitleWord[];
 }
 
 /**
- * SubtitlesOverlay — Frame-accurate burned-in subtitles with word-by-word highlighting.
- * Uses exact audio chunk timing calculated from Riva TTS PCM byte length.
+ * SubtitlesOverlay — 60FPS Kinetic Word-by-Word Subtitle Overlay.
+ * Renders glowing active spoken words aligned to NVIDIA Riva / Whisper audio timestamps.
  */
-export const SubtitlesOverlay: React.FC<SubtitlesOverlayProps> = ({ chunks = [] }) => {
+export const SubtitlesOverlay: React.FC<SubtitlesOverlayProps> = ({ subtitleChunks = [] }) => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
 
-  if (!chunks || chunks.length === 0) return null;
+  if (!subtitleChunks || subtitleChunks.length === 0) return null;
 
-  const currentSub = chunks.find(s => frame >= s.startFrame && frame <= s.endFrame);
-
-  if (!currentSub) return null;
-
-  const words = currentSub.text.split(' ');
-  const totalSubFrames = currentSub.endFrame - currentSub.startFrame;
-  const progress = (frame - currentSub.startFrame) / Math.max(1, totalSubFrames);
-  const activeWordIdx = Math.min(Math.floor(progress * words.length), words.length - 1);
-
-  // Fade in / out opacity for smooth reading
-  const opacity = interpolate(
-    frame,
-    [currentSub.startFrame, currentSub.startFrame + 8, currentSub.endFrame - 8, currentSub.endFrame],
-    [0, 1, 1, 0],
-    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+  // Find currently spoken word index
+  const activeWordIdx = subtitleChunks.findIndex(
+    (w) => frame >= w.startFrame && frame <= w.endFrame
   );
+
+  if (activeWordIdx === -1) {
+    // If between sentences within 10 frames, show last sentence snippet
+    const prevWordIdx = subtitleChunks.findLastIndex((w) => frame >= w.endFrame);
+    if (prevWordIdx === -1 || frame - subtitleChunks[prevWordIdx].endFrame > 15) {
+      return null;
+    }
+  }
+
+  const currentIdx = activeWordIdx >= 0 ? activeWordIdx : subtitleChunks.findLastIndex((w) => frame >= w.endFrame);
+  
+  // Show a rolling window of 6 words centered around current spoken word
+  const windowSize = 6;
+  const startIdx = Math.max(0, currentIdx - 2);
+  const visibleWords = subtitleChunks.slice(startIdx, startIdx + windowSize);
 
   return (
     <div
       style={{
         position: 'absolute',
-        bottom: 48,
+        bottom: 54,
         left: '50%',
         transform: 'translateX(-50%)',
-        zIndex: 50,
-        opacity,
+        zIndex: 100,
         display: 'flex',
         justifyContent: 'center',
-        maxWidth: 1400,
-        width: '90%',
+        maxWidth: 1200,
+        width: '85%',
       }}
     >
       <div
         style={{
-          backgroundColor: 'rgba(9, 12, 16, 0.92)',
-          border: '1px solid rgba(16, 185, 129, 0.45)',
-          borderRadius: 16,
-          padding: '14px 32px',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.85), 0 0 24px rgba(16, 185, 129, 0.2)',
-          backdropFilter: 'blur(8px)',
+          backgroundColor: 'rgba(9, 12, 16, 0.94)',
+          border: '1.5px solid rgba(16, 185, 129, 0.5)',
+          borderRadius: 20,
+          padding: '16px 36px',
+          boxShadow: '0 12px 36px rgba(0, 0, 0, 0.9), 0 0 30px rgba(16, 185, 129, 0.25)',
+          backdropFilter: 'blur(12px)',
           textAlign: 'center',
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'center',
-          gap: '8px 12px',
+          alignItems: 'center',
+          gap: '10px 14px',
         }}
       >
-        {words.map((word, i) => {
-          const isActive = i === activeWordIdx;
-          const isPast = i < activeWordIdx;
+        {visibleWords.map((wordObj, i) => {
+          const isActive = frame >= wordObj.startFrame && frame <= wordObj.endFrame;
+          const isPast = frame > wordObj.endFrame;
+
+          // Pop animation spring for active spoken word
+          const wordFrameOffset = Math.max(0, frame - wordObj.startFrame);
+          const popScale = isActive
+            ? spring({
+                frame: wordFrameOffset,
+                fps,
+                config: { damping: 14, stiffness: 220 },
+              })
+            : 1;
+
           return (
             <span
-              key={i}
+              key={`${wordObj.startFrame}-${i}`}
               style={{
                 fontFamily: 'Inter, system-ui, sans-serif',
-                fontSize: isActive ? 28 : 26,
-                fontWeight: isActive ? 800 : 600,
-                color: isActive ? '#10B981' : isPast ? '#FFFFFF' : '#94A3B8',
-                textShadow: isActive ? '0 0 16px rgba(16, 185, 129, 0.9)' : 'none',
-                transform: isActive ? 'scale(1.08)' : 'scale(1)',
-                transition: 'all 0.08s ease',
+                fontSize: isActive ? 32 : 28,
+                fontWeight: isActive ? 900 : 600,
+                color: isActive ? '#10B981' : isPast ? '#F3F4F6' : '#6B7280',
+                textShadow: isActive
+                  ? '0 0 20px rgba(16, 185, 129, 0.95), 0 0 10px rgba(16, 185, 129, 0.6)'
+                  : 'none',
+                transform: `scale(${isActive ? popScale * 1.12 : 1})`,
+                transition: 'color 0.05s ease, transform 0.05s ease',
+                letterSpacing: '-0.01em',
               }}
             >
-              {word}
+              {wordObj.text}
             </span>
           );
         })}

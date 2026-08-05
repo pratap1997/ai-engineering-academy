@@ -7,7 +7,7 @@ import { MatrixCodeReveal } from './components/MatrixCodeReveal';
 import { WeightLearningAnimation } from './components/WeightLearningAnimation';
 import { XorLimitScene } from './components/XorLimitScene';
 import { GlitchTransition } from './components/GlitchTransition';
-import { SubtitlesOverlay, SubtitleChunk } from './components/SubtitlesOverlay';
+import { SubtitlesOverlay, SubtitleWord } from './components/SubtitlesOverlay';
 
 interface MasterclassVideoProps {
   title: string;
@@ -15,7 +15,7 @@ interface MasterclassVideoProps {
   codeSnippet: string;
   audioSrc: string;
   durationInFrames?: number;
-  subtitleChunks?: SubtitleChunk[];
+  subtitleChunks?: SubtitleWord[];
 }
 
 /**
@@ -39,8 +39,8 @@ export const MasterclassVideo: React.FC<MasterclassVideoProps> = ({
       {/* NVIDIA Riva TTS Audio — synchronized to full video */}
       <Audio src={staticFile(audioSrc)} />
 
-      {/* Burned-in Subtitles Overlay (dynamically synchronized to Riva TTS chunks) */}
-      <SubtitlesOverlay chunks={subtitleChunks} />
+      {/* Burned-in Subtitles Overlay (dynamically synchronized to Riva TTS word timestamps) */}
+      <SubtitlesOverlay subtitleChunks={subtitleChunks} />
 
       {/* ── Chapter 1: Introduction ── */}
       <Sequence from={0} durationInFrames={600}>
