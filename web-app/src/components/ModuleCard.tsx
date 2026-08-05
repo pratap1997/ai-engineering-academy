@@ -15,7 +15,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({ module, onOpenDetail }) 
     >
       <div className="space-y-4">
         
-        {/* Header Badges (OpenAgentSkill Style) */}
+        {/* Header Badges (AI Engineering Skool Style) */}
         <div className="flex items-center justify-between text-xs font-mono">
           <span className="font-bold text-[var(--accent-primary)] bg-[var(--bg-elevated)] px-2.5 py-1 rounded border border-[var(--border-subtle)]">
             MODULE #{module.id}
