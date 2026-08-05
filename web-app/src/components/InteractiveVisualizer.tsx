@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Sliders, Sparkles, RefreshCw } from 'lucide-react';
+import { LossLandscape3D } from './LossLandscape3D';
+import { HiddenSpaceWarp3D } from './HiddenSpaceWarp3D';
+import { GlobalSwarmGlobe3D } from './GlobalSwarmGlobe3D';
 
 interface InteractiveVisualizerProps {
   moduleId: string;
@@ -23,15 +26,30 @@ export const InteractiveVisualizer: React.FC<InteractiveVisualizerProps> = ({ mo
     <div className="panel-card p-6 bg-[#121620] border-indigo-500/30 space-y-5 my-4">
       <div className="flex items-center justify-between border-b border-white/5 pb-3">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-indigo-400" />
+          <Sparkles className="w-4 h-4 text-emerald-400" />
           <h3 className="text-sm font-bold text-slate-100 font-heading">
-            Interactive Architecture Visualizer
+            3D Interactive Architecture Visualizer
           </h3>
         </div>
-        <span className="text-xs font-mono text-indigo-400 bg-indigo-500/10 px-2.5 py-0.5 rounded border border-indigo-500/20">
-          Live Model
+        <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+          60 FPS WebGL Engine
         </span>
       </div>
+
+      {/* MODULE 001: 3D LOSS LANDSCAPE */}
+      {num === 1 && (
+        <LossLandscape3D />
+      )}
+
+      {/* MODULE 002: 3D HIDDEN SPACE WARPING */}
+      {num === 2 && (
+        <HiddenSpaceWarp3D />
+      )}
+
+      {/* MODULE 048 / 049: 3D GLOBAL AGENT SWARM GLOBE */}
+      {(num === 48 || num === 49) && (
+        <GlobalSwarmGlobe3D />
+      )}
 
       {/* VISUALIZER FOR MODULE 010 / 011 (ATTENTION & TRANSFORMERS) */}
       {(num === 10 || num === 11) && (
@@ -92,8 +110,8 @@ export const InteractiveVisualizer: React.FC<InteractiveVisualizerProps> = ({ mo
         </div>
       )}
 
-      {/* VISUALIZER FOR MODULE 003 / 004 (BACKPROP & GRADIENT DESCENT) */}
-      {(num <= 5 && num !== 1) && (
+      {/* VISUALIZER FOR MODULE 003 / 004 / 005 (BACKPROP & GRADIENT DESCENT) */}
+      {(num >= 3 && num <= 5) && (
         <div className="space-y-4">
           <div className="flex items-center justify-between text-xs font-mono text-slate-300">
             <span>Loss Surface Optimization: L(w) = (w - 2)^2</span>
@@ -136,7 +154,7 @@ export const InteractiveVisualizer: React.FC<InteractiveVisualizerProps> = ({ mo
       )}
 
       {/* VISUALIZER FOR MODULE 017 (MIXTURE OF EXPERTS) */}
-      {num >= 17 && (
+      {num === 17 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between text-xs font-mono text-slate-300">
             <span>MoE Router Gating Top-K Selection</span>
