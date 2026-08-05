@@ -1,10 +1,10 @@
 [build]
-  base = "web-app"
-  command = "npm run build"
-  publish = "dist"
+  command = "cd web-app && npm install --legacy-peer-deps && npm run build"
+  publish = "web-app/dist"
 
 [build.environment]
   GIT_SUBMODULES = "false"
+  NODE_VERSION = "20"
 
 [[redirects]]
   from = "/*"

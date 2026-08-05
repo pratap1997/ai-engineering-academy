@@ -1,0 +1,7 @@
+{
+  "name": "ai-engineering-skool-root",
+  "private": true,
+  "scripts": {
+    "build": "cd web-app && npm install --legacy-peer-deps && npm run build"
+  }
+}
