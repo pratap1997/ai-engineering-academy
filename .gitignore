@@ -12,8 +12,6 @@ ENV/
 .pytest_cache/
 
 # ignore all pdf creation files
-package.json
-package-lock.json
 docsifytopdf.js
 docs/_sidebar.md
 

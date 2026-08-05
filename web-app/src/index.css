@@ -1,106 +1,155 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
 
+/* 
+ * OpenAgentSkill Editorial Design System 
+ * Clean, High-Contrast, Professional, Zero AI-Slop Look
+ */
 :root {
-  /* Quiet Intelligence Design Tokens (Linear x Claude x Brilliant) */
-  --bg-app: #0B0D12;
-  --bg-surface: #11151D;
-  --bg-elevated: #171C26;
-  --bg-hover: #1A202C;
+  /* Warm Editorial Canvas Tokens */
+  --bg-app: #FAF9F6;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #F3F4F1;
+  --bg-hover: #EBECE8;
+
+  --border-subtle: #E5E5DF;
+  --border-strong: #D4D4CD;
+  --border-active: #059669;
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-active: 0 4px 12px rgba(5, 150, 105, 0.1);
+
+  /* Signature Emerald & Editorial Accents */
+  --accent-primary: #059669;
+  --accent-primary-hover: #047857;
+  --accent-success: #10B981;
+  --accent-warning: #D97706;
+  --accent-error: #DC2626;
+
+  /* Typography Colors */
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
+}
+
+/* Dark Editorial Mode Support */
+[data-theme="dark"] {
+  --bg-app: #0F1210;
+  --bg-surface: #161A17;
+  --bg-elevated: #1F2420;
+  --bg-hover: #272E29;
 
   --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-active: rgba(108, 140, 255, 0.45);
-  --shadow-active: 0 0 0 1px rgba(108, 140, 255, 0.15);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-active: #10B981;
 
-  --accent-primary: #6C8CFF;
-  --accent-success: #32D583;
-  --accent-warning: #FDB022;
-  --accent-error: #F97066;
-
-  --text-primary: #F3F5F7;
-  --text-secondary: #9CA6B5;
-  --text-muted: #667085;
+  --text-primary: #F9FAFB;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
 }
 
 body {
   background-color: var(--bg-app);
   color: var(--text-primary);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   margin: 0;
   padding: 0;
   min-height: 100vh;
 }
 
-h1, h2, h3, h4, .font-heading {
-  font-family: 'Outfit', 'Inter', sans-serif;
-  letter-spacing: -0.02em;
+h1, h2, h3, .font-heading {
+  font-family: 'Newsreader', 'Georgia', 'Cambria', serif;
+  letter-spacing: -0.015em;
+  font-weight: 700;
 }
 
 code, pre, .font-mono {
-  font-family: 'Fira Code', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-/* Restrained Glass & Panel Utilities */
+/* OpenAgentSkill Editorial Card & Badge Styles */
 .panel-card {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 0.85rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 
 .panel-card:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: var(--border-strong);
 }
 
 .panel-card-active {
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-active);
+  border: 1.5px solid var(--accent-primary);
   box-shadow: var(--shadow-active);
 }
 
 .panel-elevated {
   background-color: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
-  border-radius: 0.85rem;
+  border-radius: 0.75rem;
 }
 
-/* Primary Button (Quiet Blue) */
-.btn-indigo {
-  background-color: #6C8CFF;
-  color: #ffffff;
+/* Primary Button (OpenAgentSkill Emerald Green) */
+.btn-emerald {
+  background-color: var(--accent-primary);
+  color: #FFFFFF;
   font-weight: 600;
-  border-radius: 0.6rem;
-  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+  padding: 0.55rem 1.15rem;
   display: inline-flex;
-  items-center: center;
+  align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
-.btn-indigo:hover {
-  background-color: #5A7BEF;
+.btn-emerald:hover {
+  background-color: var(--accent-primary-hover);
 }
 
-/* Secondary Button (Subtle Surface) */
+/* Secondary Button (Editorial Crisp Outline) */
 .btn-subtle {
-  background-color: var(--bg-elevated);
-  color: var(--text-secondary);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
   border: 1px solid var(--border-subtle);
   font-weight: 500;
-  border-radius: 0.6rem;
-  padding: 0.5rem 0.85rem;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+  padding: 0.55rem 1rem;
   display: inline-flex;
-  items-center: center;
+  align-items: center;
   gap: 0.4rem;
-  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .btn-subtle:hover {
-  color: var(--text-primary);
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: var(--border-strong);
   background-color: var(--bg-hover);
+}
+
+/* Badge Pills */
+.badge-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-elevated);
+  color: var(--text-secondary);
+}
+
+.badge-emerald {
+  background-color: rgba(5, 150, 105, 0.08);
+  border-color: rgba(5, 150, 105, 0.25);
+  color: #047857;
 }
 
 /* Custom Scrollbars */
@@ -112,9 +161,9 @@ code, pre, .font-mono {
   background: var(--bg-app);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e2638;
+  background: var(--border-strong);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2d3850;
+  background: var(--text-muted);
 }
