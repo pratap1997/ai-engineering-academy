@@ -112,25 +112,17 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="hidden sm:inline">AI Mentor</span>
         </button>
 
-        {/* Top-Right Corner User Profile (MP) */}
-        <div className="relative group flex items-center gap-2 pl-1">
-          <div
-            title="Mahendra Pratap (AI Engineer)"
-            className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#10B981]/30 to-[#059669]/50 border-2 border-[#10B981] flex items-center justify-center text-white text-xs font-mono font-bold cursor-pointer shadow-md hover:scale-105 transition-all relative"
-          >
-            MP
-            {/* Green Online Dot */}
-            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-[#10B981] border-2 border-[#0D1117] rounded-full" />
-          </div>
-
-          {/* Hover Tooltip */}
-          <div className="absolute right-0 top-11 hidden group-hover:flex flex-col items-end pointer-events-none z-50 animate-fade-in">
-            <div className="bg-[#161B22] border border-[#10B981]/30 text-white px-3 py-1.5 rounded-lg shadow-xl text-xs font-mono whitespace-nowrap">
-              <div className="font-bold text-[#10B981]">Mahendra Pratap</div>
-              <div className="text-[10px] text-slate-400">AI Engineering Learner</div>
-            </div>
-          </div>
-        </div>
+        {/* Top-Right GitHub Open-Source Link */}
+        <a
+          href="https://github.com/pratap1997/ai-engineering-academy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="p-2 bg-[#161B22] hover:bg-[#21262D] border border-white/10 rounded-lg text-slate-300 hover:text-[#10B981] transition-all flex items-center gap-1.5 text-xs font-mono"
+          title="View GitHub Open Source Repository"
+        >
+          <FolderGit2 className="w-4 h-4 text-[#10B981]" />
+          <span className="hidden sm:inline font-semibold">GitHub</span>
+        </a>
 
       </div>
 

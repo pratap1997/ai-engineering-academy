@@ -20,7 +20,7 @@ export const LearnView: React.FC<LearnViewProps> = ({ onOpenModule, onExploreRoa
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-[#10B981]" />
           <h2 className="text-2xl md:text-3xl font-bold font-heading text-white tracking-tight">
-            Good morning, Mahendra
+            Master AI Engineering From First Principles
           </h2>
         </div>
         <p className="text-sm text-slate-300 font-medium max-w-2xl leading-relaxed">
